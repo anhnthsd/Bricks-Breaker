@@ -5,7 +5,7 @@ namespace Game.Script
 {
     public class BallScript : MonoBehaviour
     {
-        [SerializeField] private Rigidbody2D _rigi;
+        [SerializeField] public Rigidbody2D _rigi;
         public StateBall state = StateBall.Start;
 
         private void OnCollisionEnter2D(Collision2D col)
@@ -13,7 +13,7 @@ namespace Game.Script
             if (col.gameObject.CompareTag("wallbottom"))
             {
                 _rigi.velocity = Vector2.zero;
-                transform.position = new Vector3(transform.position.x, -3.35f);
+                transform.position = new Vector3(transform.position.x, -3.33f);
                 state = StateBall.Done;
                 GameController.ins.OnBallFall();
             }

@@ -8,7 +8,8 @@ namespace Game.Script
     {
         public int hpBrick;
         public TextMeshProUGUI textBrick;
-        
+        public GameObject fxBrick;
+
         public override void OnSpawn(int hp)
         {
             hpBrick = hp;
@@ -19,15 +20,22 @@ namespace Game.Script
         {
             if (col.gameObject.CompareTag("ball"))
             {
-                hpBrick--;
-                textBrick.text = hpBrick.ToString();
-                if (hpBrick == 0)
-                {
-                    gameObject.SetActive(false);
-                    textBrick.gameObject.SetActive(false);
-                }
+                var fx = Instantiate(fxBrick);
+                fx.transform.position = transform.position;
+                OnDamge();
+                Destroy(fx, 0.3f);
             }
         }
-        
+
+        public void OnDamge()
+        {
+            hpBrick--;
+            textBrick.text = hpBrick.ToString();
+            if (hpBrick <= 0)
+            {
+                gameObject.SetActive(false);
+                textBrick.gameObject.SetActive(false);
+            }
+        }
     }
 }

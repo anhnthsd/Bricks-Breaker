@@ -100,8 +100,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   srBrick: {fileID: 7539232775066866784}
   colBrick: {fileID: 2316515516308741670}
+  i: 0
+  j: 0
   hpBrick: 0
   textBrick: {fileID: 0}
+  fxBrick: {fileID: 854858744462582526, guid: 5b3109f610cc31746a19a5e7b92d4bdc, type: 3}
 --- !u!61 &2316515516308741670
 BoxCollider2D:
   m_ObjectHideFlags: 0

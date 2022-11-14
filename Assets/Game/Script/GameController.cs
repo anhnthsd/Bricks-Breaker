@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -15,6 +16,7 @@ namespace Game.Script
         private Camera cam;
         public BallScript ball;
         public GameObject direcBall;
+        public GameObject addBall;
         public List<GameObject> listDirecBall;
         public List<GameObject> listBricks;
 
@@ -25,14 +27,18 @@ namespace Game.Script
         private bool isFly = false;
         public GameObject[,] lsBrick;
 
+        public GameObject fxBrick;
+        public GameObject fxDamage;
+        public GameObject fxDamageVer;
+
         public int[,] lsMap = new int[,]
         {
             { 0, 1, 1, 0, 1, 2, 1 },
             { 3, 1, 0, 0, 1, 2, 1 },
             { 0, 1, 2, 1, 1, 1, 3 },
             { 1, 0, 1, 0, 1, 1, 1 },
-            // { 0, 1, 1, 0, 1, 2, 1 },
-            // { 3, 1, 0, 0, 1, 2, 1 },
+            { 1, 1, 1, 3, 1, 2, 1 },
+            { 3, 1, 0, 0, 1, 2, 1 },
             // { 0, 1, 2, 1, 1, 1, 3 },
             // { 1, 0, 1, 0, 1, 1, 1 },
         };
@@ -49,7 +55,8 @@ namespace Game.Script
         {
             cam = Camera.main;
             CreateBrick();
-            CreateBall(10, new Vector2(0, -3.35f));
+            CreateBall(10, new Vector2(0, -3.33f));
+            CreateDirecBall(10, new Vector2(0, -3.33f));
         }
 
         void Update()
@@ -195,6 +202,13 @@ namespace Game.Script
                 var newBall = Instantiate(ball);
                 newBall.transform.position = position;
                 lsBalls.Add(newBall);
+            }
+        }
+
+        public void CreateDirecBall(int ballCount, Vector2 position)
+        {
+            for (int i = 0; i < ballCount; i++)
+            {
                 var direcB = Instantiate(direcBall);
                 direcBall.SetActive(false);
                 listDirecBall.Add(direcB);
@@ -239,7 +253,11 @@ namespace Game.Script
                         case 3:
                             brickNew = Instantiate(listBricks[2]);
                             brickNew.transform.position = new Vector3(-2.45f + 0.8f * i, 2.5f - 0.8f * j, 0);
-                            indexSprite = Random.Range(22, 28);
+                            // indexSprite = Random.Range(22, 28);
+                            indexSprite = 23;
+                            brickNew.GetComponent<BrickC>().type = TypeItem.DamageVer;
+                            // indexSprite = Random.Range(25, 27);
+                            // brickNew.GetComponent<BrickC>().type = TypeItem.AddBall;
                             break;
                         default:
                             break;
@@ -268,7 +286,6 @@ namespace Game.Script
                 {
                     ballFall++;
                     if (ballFirstFall == null)
-
                     {
                         ballFirstFall = lsBalls[i];
                     }
@@ -283,9 +300,100 @@ namespace Game.Script
             }
 
             if (ballFall != lsBalls.Count) return;
+            CreateBall(sumAddBall, ballFirstFall.transform.position);
+            sumAddBall = 0;
             isFly = false;
             ballFirstFall = null;
             ballFall = 0;
+        }
+
+        private int sumAddBall = 0;
+
+        public void OnAddBall(int count, Vector3 pos)
+        {
+            sumAddBall += count;
+            var newBall = Instantiate(addBall);
+            newBall.transform.position = pos;
+            newBall.transform.DOMove(new Vector3(pos.x, -3.35f, 0), 0.2f)
+                .OnComplete((() => StartCoroutine(MoveAddBall(newBall))));
+        }
+
+        private IEnumerator MoveAddBall(GameObject newBall)
+        {
+            while (ballFirstFall == null)
+            {
+                yield return new WaitForSeconds(1);
+            }
+
+            newBall.transform.DOMove(ballFirstFall.transform.position, 0.2f).OnComplete((() => Destroy(newBall)));
+        }
+
+        public void OnDamageHor(int hor)
+        {
+            for (int i = 0; i < lsBrick.GetLength(0); i++)
+            {
+                if (lsMap[hor, i] != 0 && lsMap[hor, i] != 3)
+                {
+                    if (lsBrick[i, hor].GetComponent<NormalBrick>())
+                    {
+                        lsBrick[i, hor].GetComponent<NormalBrick>().OnDamge();
+                    }
+                }
+            }
+        }
+
+        public void OnDamageVer(int ver)
+        {
+            for (int i = 0; i < lsBrick.GetLength(1); i++)
+            {
+                if (lsMap[i, ver] != 0 && lsMap[i, ver] != 3)
+                {
+                    if (lsBrick[ver, i].GetComponent<NormalBrick>())
+                    {
+                        lsBrick[ver, i].GetComponent<NormalBrick>().OnDamge();
+                    }
+                }
+            }
+        }
+
+        public void OnDamageBoth(int hor, int ver)
+        {
+            OnDamageHor(hor);
+            OnDamageVer(ver);
+        }
+
+        public void OnDamage(Vector2 position, TypeItem type, int hor, int ver)
+        {
+            switch (type)
+            {
+                case TypeItem.DamageHor:
+                    OnDamageHor(hor);
+                    ShowFxHor(position);
+                    break;
+                case TypeItem.DamageVer:
+                    OnDamageVer(ver);
+                    ShowFxVer(position);
+                    break;
+                case TypeItem.DamageBoth:
+                    OnDamageBoth(hor, ver);
+                    ShowFxHor(position);
+                    ShowFxVer(position);
+                    break;
+            }
+        }
+
+        private void ShowFxVer(Vector2 position)
+        {
+            var fx2 = Instantiate(fxDamageVer);
+            fx2.transform.position = position;
+            Destroy(fx2, 0.3f);
+        }
+
+        private void ShowFxHor(Vector2 position)
+        {
+            var fx = Instantiate(fxDamage);
+            fx.transform.position = position;
+            Destroy(fx, 0.3f);
         }
     }
 }
