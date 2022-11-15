@@ -4,11 +4,13 @@ using UnityEngine;
 
 namespace Game.Script
 {
-    public class NormalBrick : BaseBrick
+    public class BurstBrick : BaseBrick
     {
         public int hpBrick;
         public TextMeshProUGUI textBrick;
         public GameObject fxBrick;
+        public GameObject fxBurstHor;
+        public GameObject fxBurstVer;
 
         public override void OnSpawn(int hp)
         {
@@ -49,6 +51,10 @@ namespace Game.Script
             if (hpBrick == 0)
             {
                 OnDelete();
+                GameController.ins.OnBurst(j, i);
+                var fx = Instantiate(fxBurstHor);
+                fx.transform.position = transform.position;
+                Destroy(fx, 0.3f);
             }
         }
     }

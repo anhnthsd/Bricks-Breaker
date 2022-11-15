@@ -13,17 +13,17 @@ namespace Game.Script
     public class GameController : MonoBehaviour
     {
         public static GameController ins;
-        private Camera cam;
+        public Camera cam;
         public BallScript ball;
         public GameObject direcBall;
         public GameObject addBall;
         public List<GameObject> listDirecBall;
+        public List<BallScript> lsBalls;
         public List<GameObject> listBricks;
 
         public List<Sprite> lsBrickSprites;
         public TextMeshProUGUI textPrefab;
         public Transform parentText;
-        public List<BallScript> lsBalls;
         private bool isFly = false;
         public GameObject[,] lsBrick;
 
@@ -33,18 +33,58 @@ namespace Game.Script
 
         public int[,] lsMap = new int[,]
         {
-            { 0, 1, 1, 0, 1, 2, 1 },
-            { 3, 1, 0, 0, 1, 2, 1 },
-            { 0, 1, 2, 1, 1, 1, 3 },
-            { 1, 0, 1, 0, 1, 1, 1 },
-            { 1, 1, 1, 3, 1, 2, 1 },
-            { 3, 1, 0, 0, 1, 2, 1 },
-            // { 0, 1, 2, 1, 1, 1, 3 },
-            // { 1, 0, 1, 0, 1, 1, 1 },
+            { 1, 1, 1, 1, 1, 1, 1 },
+            { 0, 1, 1, 1, 1, 1, 1 },
+            { 0, 2, 1, 1, 1, 1, 1 },
+            { 0, 1, 1, 1, 1, 1, 1 },
+            { 3, 1, 1, 1, 3, 1, 1 },
+            { 0, 1, 1, 1, 1, 1, 1 },
+            { 0, 1, 1, 1, 1, 1, 1 },
+            { 1, 1, 1, 2, 1, 1, 1 },
+            { 0, 1, 1, 1, 1, 1, 1 },
+            { 0, 1, 1, 1, 1, 1, 1 },
+            { 0, 1, 3, 1, 1, 3, 1 },
+            { 2, 1, 1, 1, 1, 2, 1 },
+            { 0, 1, 1, 1, 1, 1, 1 },
+            { 0, 1, 1, 1, 1, 1, 1 },
         };
+        // public TypeOfBrick[,] lsMap = new TypeOfBrick[,]
+        // {
+        //     {
+        //         TypeOfBrick.Empty, TypeOfBrick.Normal, TypeOfBrick.Normal, TypeOfBrick.Empty, TypeOfBrick.Normal,
+        //         TypeOfBrick.Triangle, TypeOfBrick.Normal
+        //     },
+        //     {
+        //         TypeOfBrick.AddBall, TypeOfBrick.Normal, TypeOfBrick.Empty, TypeOfBrick.Empty, TypeOfBrick.Normal,
+        //         TypeOfBrick.Triangle, TypeOfBrick.Normal
+        //     },
+        //     {
+        //         TypeOfBrick.Empty, TypeOfBrick.Normal, TypeOfBrick.Triangle, TypeOfBrick.Normal, TypeOfBrick.Normal,
+        //         TypeOfBrick.Normal, TypeOfBrick.AddBall
+        //     },
+        //     {
+        //         TypeOfBrick.Normal, TypeOfBrick.Empty, TypeOfBrick.Normal, TypeOfBrick.Empty, TypeOfBrick.Normal,
+        //         TypeOfBrick.Normal, TypeOfBrick.Normal
+        //     },
+        //     {
+        //         TypeOfBrick.Normal, TypeOfBrick.Normal, TypeOfBrick.Normal, TypeOfBrick.AddBall, TypeOfBrick.Normal,
+        //         TypeOfBrick.Triangle, TypeOfBrick.Normal
+        //     },
+        //     {
+        //         TypeOfBrick.AddBall, TypeOfBrick.DeleteHorizontal, TypeOfBrick.Empty, TypeOfBrick.Empty,
+        //         TypeOfBrick.Normal, TypeOfBrick.ShootRandom, TypeOfBrick.Damage
+        //     },
+        //     {
+        //         TypeOfBrick.Empty, TypeOfBrick.Empty, TypeOfBrick.Empty, TypeOfBrick.Empty, TypeOfBrick.Empty,
+        //         TypeOfBrick.Empty, TypeOfBrick.Empty
+        //     },
+        //     {
+        //         TypeOfBrick.Empty, TypeOfBrick.Empty, TypeOfBrick.Empty, TypeOfBrick.Empty, TypeOfBrick.Empty,
+        //         TypeOfBrick.Empty, TypeOfBrick.Empty
+        //     },
+        // };
 
-        public LayerMask wallMaskHor;
-        public LayerMask wallMaskVer;
+        public LayerMask wallMask;
 
         private void Awake()
         {
@@ -85,7 +125,7 @@ namespace Game.Script
                 var posStart = lsBalls[0].transform.position;
                 Vector2 direction = new Vector2(point.x - posStart.x, point.y - posStart.y);
 
-                var ray = Physics2D.Raycast(posStart, direction, 20, wallMaskHor);
+                var ray = Physics2D.Raycast(posStart, direction, 20, wallMask);
                 bool check = true;
                 int balls = 0;
                 if (ray.collider != null)
@@ -190,7 +230,7 @@ namespace Game.Script
         {
             for (int i = 0; i < lsBalls.Count; i++)
             {
-                lsBalls[i].Fly(direction.normalized * 400);
+                lsBalls[i].Fly(direction.normalized * 450);
                 yield return new WaitForSeconds(0.2f);
             }
         }
@@ -215,22 +255,23 @@ namespace Game.Script
             }
         }
 
+        public int countRow = 4;
         public void CreateBrick()
         {
             lsBrick = new GameObject[lsMap.GetLongLength(1), lsMap.GetLongLength(0)];
             for (int i = 0; i < lsBrick.GetLongLength(0); i++)
             {
-                for (int j = 0; j < lsBrick.GetLongLength(1); j++)
+                for (int j = 0; j < countRow; j++)
                 {
                     GameObject brickNew = null;
                     TextMeshProUGUI txt;
                     int indexSprite = 0;
-                    switch (lsMap[j, i])
+                    var brickType = (TypeOfBrick)lsMap[j, i];
+                    switch (brickType)
                     {
-                        case 1:
+                        case TypeOfBrick.Normal:
                             brickNew = Instantiate(listBricks[0]);
 
-                            brickNew.transform.position = new Vector3(-2.45f + 0.8f * i, 2.5f - 0.8f * j, 0);
                             indexSprite = Random.Range(0, 10);
                             txt = Instantiate(textPrefab);
                             txt.GetComponent<RectTransform>().anchoredPosition =
@@ -239,25 +280,74 @@ namespace Game.Script
                             brickNew.GetComponent<NormalBrick>().textBrick = txt;
                             txt.transform.SetParent(parentText);
                             break;
-                        case 2:
+                        case TypeOfBrick.DeleteHorizontal:
+                            brickNew = Instantiate(listBricks[4]);
+
+                            indexSprite = 29;
+                            txt = Instantiate(textPrefab);
+                            txt.GetComponent<RectTransform>().anchoredPosition =
+                                cam.WorldToScreenPoint(brickNew.transform.position);
+
+                            brickNew.GetComponent<BurstBrick>().textBrick = txt;
+                            txt.transform.SetParent(parentText);
+                            break;
+                        case TypeOfBrick.Triangle:
                             brickNew = Instantiate(listBricks[1]);
-                            brickNew.transform.position = new Vector3(-2.45f + 0.8f * i, 2.5f - 0.8f * j, 0);
+                            brickNew.transform.rotation = Quaternion.Euler(0, 0, 90);
                             indexSprite = Random.Range(11, 21);
                             txt = Instantiate(textPrefab);
                             txt.GetComponent<RectTransform>().anchoredPosition =
-                                cam.WorldToScreenPoint(brickNew.transform.position + new Vector3(0.1f, -0.1f, 0));
+                                cam.WorldToScreenPoint(brickNew.transform.position);
 
                             brickNew.GetComponent<NormalBrick>().textBrick = txt;
                             txt.transform.SetParent(parentText);
                             break;
-                        case 3:
+                        case TypeOfBrick.AddBall:
                             brickNew = Instantiate(listBricks[2]);
-                            brickNew.transform.position = new Vector3(-2.45f + 0.8f * i, 2.5f - 0.8f * j, 0);
                             // indexSprite = Random.Range(22, 28);
-                            indexSprite = 23;
-                            brickNew.GetComponent<BrickC>().type = TypeItem.DamageVer;
-                            // indexSprite = Random.Range(25, 27);
-                            // brickNew.GetComponent<BrickC>().type = TypeItem.AddBall;
+                            // indexSprite = 23;
+                            // brickNew.GetComponent<BrickC>().type = TypeItem.DamageVer;
+                            indexSprite = Random.Range(25, 27);
+                            brickNew.GetComponent<ItemAddBall>().sumBall = indexSprite switch
+                            {
+                                25 => 1,
+                                26 => 2,
+                                27 => 3,
+                                _ => brickNew.GetComponent<ItemAddBall>().sumBall
+                            };
+
+                            break;
+                        case TypeOfBrick.Damage:
+                            brickNew = Instantiate(listBricks[3]);
+                            indexSprite = Random.Range(22, 24);
+                            brickNew.GetComponent<ItemDamage>().type = indexSprite switch
+                            {
+                                22 => TypeOfBrick.DamageHorizontal,
+                                23 => TypeOfBrick.DamageVertical,
+                                24 => TypeOfBrick.DamageBoth,
+                                _ => brickNew.GetComponent<ItemDamage>().type
+                            };
+                            break;
+                        case TypeOfBrick.DamageHorizontal:
+                            brickNew = Instantiate(listBricks[3]);
+                            indexSprite = 22;
+                            brickNew.GetComponent<ItemDamage>().type = TypeOfBrick.DamageHorizontal;
+                            break;
+                        case TypeOfBrick.DamageVertical:
+                            brickNew = Instantiate(listBricks[3]);
+                            indexSprite = 22;
+                            brickNew.GetComponent<ItemDamage>().type = TypeOfBrick.DamageVertical;
+                            break;
+                        case TypeOfBrick.DamageBoth:
+                            brickNew = Instantiate(listBricks[3]);
+                            indexSprite = 22;
+                            brickNew.GetComponent<ItemDamage>().type = TypeOfBrick.DamageBoth;
+                            break;
+                        case TypeOfBrick.Fixed:
+                            break;
+                        case TypeOfBrick.ShootRandom:
+                            brickNew = Instantiate(listBricks[5]);
+                            indexSprite = 33;
                             break;
                         default:
                             break;
@@ -265,6 +355,7 @@ namespace Game.Script
 
                     if (brickNew)
                     {
+                        brickNew.GetComponent<BaseBrick>().SetPosition(new Vector2(-2.45f + 0.8f * i, 2.5f - 0.8f * j));
                         brickNew.GetComponent<SpriteRenderer>().sprite = lsBrickSprites[indexSprite];
                         brickNew.GetComponent<BaseBrick>().OnSpawn(Random.Range(1, 10));
                         brickNew.GetComponent<BaseBrick>().i = i;
@@ -275,8 +366,13 @@ namespace Game.Script
             }
         }
 
+        public void DelBrick(int i, int j)
+        {
+            lsBrick[i, j] = null;
+        }
+
         public BallScript ballFirstFall;
-        private int ballFall = 0;
+        private int _ballFall = 0;
 
         public void OnBallFall()
         {
@@ -284,7 +380,7 @@ namespace Game.Script
             {
                 if (lsBalls[i].state == StateBall.Done)
                 {
-                    ballFall++;
+                    _ballFall++;
                     if (ballFirstFall == null)
                     {
                         ballFirstFall = lsBalls[i];
@@ -299,19 +395,85 @@ namespace Game.Script
                 }
             }
 
-            if (ballFall != lsBalls.Count) return;
-            CreateBall(sumAddBall, ballFirstFall.transform.position);
-            sumAddBall = 0;
+            if (_ballFall != lsBalls.Count) return;
+            AfterTurn();
+        }
+        public void AfterTurn()
+        {
+            for (int j = lsBrick.GetLength(1) - 1; j >= 0; j--)
+            {
+                for (int i = 0; i < lsBrick.GetLength(0); i++)
+                {
+                    if (lsBrick[i, j])
+                    {
+                        if (lsBrick[i, j].GetComponent<ItemDamage>())
+                        {
+                            if (lsBrick[i, j].GetComponent<ItemDamage>().isOver)
+                                lsBrick[i, j].GetComponent<BaseBrick>().OnDelete();
+                        }
+
+                        if (lsBrick[i, j].GetComponent<ItemShootBall>())
+                        {
+                            if (lsBrick[i, j].GetComponent<ItemShootBall>().isOver)
+                                lsBrick[i, j].GetComponent<BaseBrick>().OnDelete();
+                        }
+                    }
+
+                    if (j == 0)
+                    {
+                        lsBrick[i, j] = null;
+                    }
+                    else
+                    {
+                        lsBrick[i, j] = lsBrick[i, j - 1];
+                    }
+
+                    if (lsBrick[i, j])
+                    {
+                        var newPos = new Vector3(-2.45f + 0.8f * i, 2.5f - 0.8f * j, 0);
+                        lsBrick[i, j].GetComponent<BaseBrick>().SetPosition(newPos);
+                        lsBrick[i, j].GetComponent<BaseBrick>().i = i;
+                        lsBrick[i, j].GetComponent<BaseBrick>().j = j;
+                        if (j == lsBrick.GetLength(1) - 1)
+                        {
+                            var item = lsBrick[i, j];
+                            if (item.GetComponent<NormalBrick>() || item.GetComponent<BurstBrick>())
+                            {
+                                Debug.Log("END GAME");
+                            }
+
+                            if (lsBrick[i, j].GetComponent<ItemAddBall>())
+                            {
+                                var itemS = lsBrick[i, j].GetComponent<ItemAddBall>();
+                                var newBall = Instantiate(addBall);
+                                newBall.transform.position = newPos;
+                                newBall.transform.DOMove(ballFirstFall.transform.position, 0.3f)
+                                    .OnComplete(() => Destroy(newBall));
+                                _sumAddBall += itemS.sumBall;
+                                itemS.OnDelete();
+                            }
+                        }
+                    }
+                }
+            }
+
+            CreateBall(_sumAddBall, ballFirstFall.transform.position);
+            _sumAddBall = 0;
             isFly = false;
             ballFirstFall = null;
-            ballFall = 0;
+            _ballFall = 0;
+            countRow++;
+            for (int i = 0; i < lsBrick.GetLength(0); i++)
+            {
+                
+            }
         }
 
-        private int sumAddBall = 0;
+        private int _sumAddBall = 0;
 
         public void OnAddBall(int count, Vector3 pos)
         {
-            sumAddBall += count;
+            _sumAddBall += count;
             var newBall = Instantiate(addBall);
             newBall.transform.position = pos;
             newBall.transform.DOMove(new Vector3(pos.x, -3.35f, 0), 0.2f)
@@ -332,11 +494,12 @@ namespace Game.Script
         {
             for (int i = 0; i < lsBrick.GetLength(0); i++)
             {
-                if (lsMap[hor, i] != 0 && lsMap[hor, i] != 3)
+                var brickType = (TypeOfBrick)lsMap[hor, i];
+                if (brickType != TypeOfBrick.Empty && brickType != TypeOfBrick.AddBall)
                 {
-                    if (lsBrick[i, hor].GetComponent<NormalBrick>())
+                    if (lsBrick[i, hor].GetComponent<BaseBrick>())
                     {
-                        lsBrick[i, hor].GetComponent<NormalBrick>().OnDamge();
+                        lsBrick[i, hor].GetComponent<BaseBrick>().OnDamage();
                     }
                 }
             }
@@ -346,11 +509,13 @@ namespace Game.Script
         {
             for (int i = 0; i < lsBrick.GetLength(1); i++)
             {
-                if (lsMap[i, ver] != 0 && lsMap[i, ver] != 3)
+                var brickType = (TypeOfBrick)lsMap[i, ver];
+                if (brickType != TypeOfBrick.Empty && brickType != TypeOfBrick.AddBall)
                 {
-                    if (lsBrick[ver, i].GetComponent<NormalBrick>())
+                    if (!lsBrick[ver, i]) continue;
+                    if (lsBrick[ver, i].GetComponent<BaseBrick>())
                     {
-                        lsBrick[ver, i].GetComponent<NormalBrick>().OnDamge();
+                        lsBrick[ver, i].GetComponent<BaseBrick>().OnDamage();
                     }
                 }
             }
@@ -362,19 +527,19 @@ namespace Game.Script
             OnDamageVer(ver);
         }
 
-        public void OnDamage(Vector2 position, TypeItem type, int hor, int ver)
+        public void OnDamage(Vector2 position, TypeOfBrick type, int hor, int ver)
         {
             switch (type)
             {
-                case TypeItem.DamageHor:
+                case TypeOfBrick.DamageHorizontal:
                     OnDamageHor(hor);
                     ShowFxHor(position);
                     break;
-                case TypeItem.DamageVer:
+                case TypeOfBrick.DamageVertical:
                     OnDamageVer(ver);
                     ShowFxVer(position);
                     break;
-                case TypeItem.DamageBoth:
+                case TypeOfBrick.DamageBoth:
                     OnDamageBoth(hor, ver);
                     ShowFxHor(position);
                     ShowFxVer(position);
@@ -394,6 +559,22 @@ namespace Game.Script
             var fx = Instantiate(fxDamage);
             fx.transform.position = position;
             Destroy(fx, 0.3f);
+        }
+
+        public void OnBurst(int hor, int ver)
+        {
+            for (int i = 0; i < lsBrick.GetLength(0); i++)
+            {
+                var brickType = (TypeOfBrick)lsMap[hor, i];
+                if (brickType == TypeOfBrick.Normal || brickType == TypeOfBrick.Triangle ||
+                    brickType == TypeOfBrick.DeleteHorizontal)
+                {
+                    if (lsBrick[i, hor].GetComponent<BaseBrick>())
+                    {
+                        lsBrick[i, hor].GetComponent<BaseBrick>().OnDelete();
+                    }
+                }
+            }
         }
     }
 }

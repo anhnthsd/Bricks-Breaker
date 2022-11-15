@@ -13,10 +13,32 @@ namespace Game.Script
             colBrick.isTrigger = true;
         }
 
+        public override void OnDelete()
+        {
+            gameObject.SetActive(false);
+            GameController.ins.DelBrick(i, j);
+        }
+
+        public override void OnDamage()
+        {
+            
+        }
+
+        public override void SetPosition(Vector2 pos)
+        {
+            transform.position = pos;
+        }
+
         private void OnTriggerEnter2D(Collider2D col)
         {
-            GameController.ins.OnAddBall(sumBall, transform.position);
-            gameObject.SetActive(false);
+            AddBall(sumBall, transform.position);
+        }
+
+        public void AddBall(int count, Vector3 pos)
+        {
+            GameController.ins.OnAddBall(count, pos);
+            OnDelete();
+            
         }
     }
 }

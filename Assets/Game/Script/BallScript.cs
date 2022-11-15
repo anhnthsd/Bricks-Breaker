@@ -23,7 +23,6 @@ namespace Game.Script
         {
             if (state == StateBall.Start)
             {
-                
                 _rigi.AddForce(f);
                 state = StateBall.Fly;
             }

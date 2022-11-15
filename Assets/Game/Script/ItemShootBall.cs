@@ -1,14 +1,12 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 namespace Game.Script
 {
-    public class ItemDamage : BaseBrick
+    public class ItemShootBall : BaseBrick
     {
-        public TypeOfBrick type = TypeOfBrick.DamageHorizontal;
-        public GameObject fxDamageHor;
-        public GameObject fxDamageVer;
         public bool isOver = false;
 
         public override void OnSpawn(int hp)
@@ -22,19 +20,25 @@ namespace Game.Script
             GameController.ins.DelBrick(i, j);
         }
 
+        public override void OnDamage()
+        {
+        }
+
         public override void SetPosition(Vector2 pos)
         {
             transform.position = pos;
         }
 
-        public override void OnDamage()
-        {
-        }
-
         private void OnTriggerEnter2D(Collider2D col)
         {
             isOver = true;
-            GameController.ins.OnDamage(transform.position, type, j, i);
+            var ballS = col.GetComponent<BallScript>();
+            if (ballS.state == StateBall.Fly)
+            {
+                ballS._rigi.velocity = Vector2.zero;
+                Vector2 f = new Vector2(Random.Range(0.5f, 1), Random.Range(0.5f, 1)) * 450;
+                ballS._rigi.AddForce(f);
+            }
         }
     }
 }
