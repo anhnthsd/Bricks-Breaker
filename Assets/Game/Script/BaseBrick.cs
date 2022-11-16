@@ -11,6 +11,7 @@ namespace Game.Script
         public int j;
 
         public abstract void OnSpawn(int hp);
+        public abstract void SetSprite(TypeOfBrick type);
         public abstract void OnDelete();
         public abstract void OnDamage();
         public abstract void SetPosition(Vector2 pos);

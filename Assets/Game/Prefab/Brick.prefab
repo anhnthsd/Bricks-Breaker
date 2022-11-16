@@ -105,6 +105,18 @@ MonoBehaviour:
   hpBrick: 0
   textBrick: {fileID: 0}
   fxBrick: {fileID: 854858744462582526, guid: 5b3109f610cc31746a19a5e7b92d4bdc, type: 3}
+  lsBrickSprites:
+  - {fileID: 21300000, guid: 19c8ee20efa54f142aeb5789690f191d, type: 3}
+  - {fileID: 21300000, guid: e584443750f60214c9d54adbbde19672, type: 3}
+  - {fileID: 21300000, guid: dad0b332f11b7e84eb8105f2cf557b06, type: 3}
+  - {fileID: 21300000, guid: 7c0180626ce862e44b5de6e3a5c65263, type: 3}
+  - {fileID: 21300000, guid: dee3c3dfb2a3d5d45b9b8e0fa81cb993, type: 3}
+  - {fileID: 21300000, guid: c3582ee78cfbf4343aaf1ed6cbc3ab0b, type: 3}
+  - {fileID: 21300000, guid: 7e8cf632b9e04bc4db733757cada8aaf, type: 3}
+  - {fileID: 21300000, guid: ab795291e7491364383245ef245c408f, type: 3}
+  - {fileID: 21300000, guid: e7ca0102a0f649b499ad75915faece29, type: 3}
+  - {fileID: 21300000, guid: 322e55992639db242b30a5901c81e695, type: 3}
+  - {fileID: 21300000, guid: 0a9fb5053fb6e434c98c4e1290492da6, type: 3}
 --- !u!61 &2316515516308741670
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -103,6 +103,10 @@ MonoBehaviour:
   i: 0
   j: 0
   sumBall: 1
+  lsBrickSprites:
+  - {fileID: 21300000, guid: 14dfa24caf52eb74689696cb188cdc68, type: 3}
+  - {fileID: 21300000, guid: e56fbfe953501c94e8990372d7dceec9, type: 3}
+  - {fileID: 21300000, guid: da4996fa58262254ca490f4e57f61ddc, type: 3}
 --- !u!58 &372877907782395599
 CircleCollider2D:
   m_ObjectHideFlags: 0

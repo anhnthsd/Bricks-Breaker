@@ -103,6 +103,13 @@ MonoBehaviour:
   i: 0
   j: 0
   type: 1
+  fxDamageHor: {fileID: 0}
+  fxDamageVer: {fileID: 0}
+  isOver: 0
+  lsBrickSprites:
+  - {fileID: 21300000, guid: 5b7b4f91e1ccf42488e97166cc380b59, type: 3}
+  - {fileID: 21300000, guid: 84fbbbdc8a47c4d4685ea278a88ea430, type: 3}
+  - {fileID: 21300000, guid: 2e7b72cf42462ad47b3e87370b39a7cd, type: 3}
 --- !u!58 &372877907782395599
 CircleCollider2D:
   m_ObjectHideFlags: 0

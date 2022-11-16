@@ -14,10 +14,14 @@ namespace Game.Script
             colBrick.isTrigger = true;
         }
 
+        public override void SetSprite(TypeOfBrick type)
+        {
+        }
+
         public override void OnDelete()
         {
             gameObject.SetActive(false);
-            GameController.ins.DelBrick(i, j);
+            BrickController.ins.DelBrick(i, j);
         }
 
         public override void OnDamage()
@@ -35,9 +39,9 @@ namespace Game.Script
             var ballS = col.GetComponent<BallScript>();
             if (ballS.state == StateBall.Fly)
             {
-                ballS._rigi.velocity = Vector2.zero;
+                ballS.rigi.velocity = Vector2.zero;
                 Vector2 f = new Vector2(Random.Range(0.5f, 1), Random.Range(0.5f, 1)) * 450;
-                ballS._rigi.AddForce(f);
+                ballS.rigi.AddForce(f);
             }
         }
     }
