@@ -5,16 +5,14 @@
         Empty,
         Normal,
         Triangle,
-        Fixed,
         DeleteHorizontal,
         DeleteVertical,
         DeleteBoth,
         DeleteSurround,
+        AddBall,
         DamageHorizontal,
         DamageVertical,
         DamageBoth,
-        Damage,
-        ShootRandom,
-        AddBall
+        ShootRandom
     }
 }

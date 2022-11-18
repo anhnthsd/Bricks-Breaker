@@ -12,19 +12,21 @@ namespace Game.Script
         public static BrickController ins;
         public Camera cam;
 
-        public List<GameObject> listBricks;
-
-        public List<Sprite> lsBrickSprites;
+        public List<BaseBrick> listBricks;
+        public Transform parentBrick;
         public TextMeshProUGUI textPrefab;
         public Transform parentText;
-        public GameObject[,] lsBrick;
+        public BaseBrick[,] lsBrick;
 
-        public GameObject fxBrick;
         public GameObject fxDamage;
         public GameObject fxDamageVer;
-
+        public GameObject fxBurstHor;
+        public GameObject fxBurstVer;
+        public GameObject fxBurstSur;
 
         public int countRow = 4;
+
+        public static event Action OnEndTurn;
 
         public int[,] lsMap = new int[,]
         {
@@ -38,10 +40,28 @@ namespace Game.Script
             { 1, 1, 1, 2, 1, 1, 1 },
             { 0, 1, 1, 1, 1, 1, 1 },
             { 0, 1, 1, 1, 1, 1, 1 },
-            { 0, 1, 3, 1, 1, 3, 1 },
-            { 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 4, 0, 0, 0 },
-            { 0, 0, 0, 0, 4, 0, 13 },
+            { 0, 1, 1, 1, 1, 3, 1 },
+            { 0, 0, 3, 0, 1, 3, 1 },
+            { 7, 8, 9, 10, 11, 1, 1 },
+            { 0, 1, 2, 1, 1, 5, 1 },
+        };
+
+        public int[,] lsNumber = new int[,]
+        {
+            { 1, 1, 1, 1, 1, 1, 1 },
+            { 0, 1, 1, 1, 2, 1, 1 },
+            { 0, 2, 1, 3, 1, 1, 2 },
+            { 0, 1, 1, 1, 2, 3, 1 },
+            { 4, 1, 3, 1, 1, 1, 1 },
+            { 0, 1, 1, 1, 1, 1, 1 },
+            { 0, 1, 1, 1, 3, 1, 2 },
+            { 1, 1, 1, 1, 1, 1, 1 },
+            { 3, 1, 3, 1, 1, 1, 2 },
+            { 1, 1, 1, 1, 1, 1, 1 },
+            { 1, 3, 1, 3, 2, 1, 3 },
+            { 1, 2, 1, 1, 1, 1, 1 },
+            { 1, 1, 100, 100, 100, 100, 10 },
+            { 100, 2, 1, 1, 1, 1, 3 },
         };
 
         private void Awake()
@@ -58,154 +78,86 @@ namespace Game.Script
 
         public void CreateBrick()
         {
-            lsBrick = new GameObject[lsMap.GetLongLength(1), lsMap.GetLongLength(0)];
+            lsBrick = new BaseBrick[lsMap.GetLongLength(1), lsMap.GetLongLength(0)];
             if (countRow > lsMap.GetLongLength(0) - 1) return;
             for (int j = 0; j < countRow; j++)
             {
                 for (int i = 0; i < lsBrick.GetLongLength(0); i++)
                 {
                     var brickType = (TypeOfBrick)lsMap[lsMap.GetLongLength(0) - (countRow - j), i];
-                    CreateNewBrick(i, j, brickType);
+                    var number = lsNumber[lsMap.GetLongLength(0) - (countRow - j), i];
+                    CreateNewBrick(i, j, brickType, number);
                 }
             }
         }
 
-        public void CreateNewBrick(int i, int j, TypeOfBrick brickType)
+        public void CreateNewBrick(int i, int j, TypeOfBrick brickType, int number)
         {
-            GameObject brickNew = null;
-            TextMeshProUGUI txt;
-            int indexSprite = 0;
+            BaseBrick brickNew = null;
             switch (brickType)
             {
                 case TypeOfBrick.Normal:
                     brickNew = Instantiate(listBricks[0]);
-
-                    txt = Instantiate(textPrefab);
-                    txt.GetComponent<RectTransform>().anchoredPosition =
-                        cam.WorldToScreenPoint(brickNew.transform.position);
-
-                    brickNew.GetComponent<NormalBrick>().textBrick = txt;
-                    txt.transform.SetParent(parentText);
                     break;
                 case TypeOfBrick.Triangle:
                     brickNew = Instantiate(listBricks[1]);
                     brickNew.transform.rotation = Quaternion.Euler(0, 0, 180);
-                    
-                    txt = Instantiate(textPrefab);
-                    txt.GetComponent<RectTransform>().anchoredPosition =
-                        cam.WorldToScreenPoint(brickNew.transform.position);
-
-                    brickNew.GetComponent<NormalBrick>().textBrick = txt;
-                    txt.transform.SetParent(parentText);
                     break;
                 case TypeOfBrick.DeleteHorizontal:
                     brickNew = Instantiate(listBricks[4]);
-
-                    indexSprite = 29;
-                    txt = Instantiate(textPrefab);
-                    txt.GetComponent<RectTransform>().anchoredPosition =
-                        cam.WorldToScreenPoint(brickNew.transform.position);
-
-                    brickNew.GetComponent<BurstBrick>().textBrick = txt;
-                    txt.transform.SetParent(parentText);
+                    brickNew.GetComponent<BaseBrick>().SetSprite(TypeOfBrick.DeleteHorizontal);
                     break;
                 case TypeOfBrick.DeleteVertical:
                     brickNew = Instantiate(listBricks[4]);
 
-                    indexSprite = 30;
-                    txt = Instantiate(textPrefab);
-                    txt.GetComponent<RectTransform>().anchoredPosition =
-                        cam.WorldToScreenPoint(brickNew.transform.position);
-
-                    brickNew.GetComponent<BurstBrick>().textBrick = txt;
-                    txt.transform.SetParent(parentText);
+                    brickNew.GetComponent<BaseBrick>().SetSprite(TypeOfBrick.DeleteVertical);
                     break;
                 case TypeOfBrick.DeleteBoth:
                     brickNew = Instantiate(listBricks[4]);
-
-                    indexSprite = 31;
-                    txt = Instantiate(textPrefab);
-                    txt.GetComponent<RectTransform>().anchoredPosition =
-                        cam.WorldToScreenPoint(brickNew.transform.position);
-
-                    brickNew.GetComponent<BurstBrick>().textBrick = txt;
-                    txt.transform.SetParent(parentText);
+                    brickNew.GetComponent<BaseBrick>().SetSprite(TypeOfBrick.DeleteBoth);
                     break;
                 case TypeOfBrick.DeleteSurround:
                     brickNew = Instantiate(listBricks[4]);
-
-                    indexSprite = 32;
-                    txt = Instantiate(textPrefab);
-                    txt.GetComponent<RectTransform>().anchoredPosition =
-                        cam.WorldToScreenPoint(brickNew.transform.position);
-
-                    brickNew.GetComponent<BurstBrick>().textBrick = txt;
-                    txt.transform.SetParent(parentText);
+                    brickNew.GetComponent<BaseBrick>().SetSprite(TypeOfBrick.DeleteSurround);
                     break;
                 case TypeOfBrick.AddBall:
                     brickNew = Instantiate(listBricks[2]);
-                    // indexSprite = Random.Range(22, 28);
-                    // indexSprite = 23;
-                    // brickNew.GetComponent<BrickC>().type = TypeItem.DamageVer;
-                    indexSprite = Random.Range(25, 27);
-                    brickNew.GetComponent<ItemAddBall>().sumBall = indexSprite switch
-                    {
-                        25 => 1,
-                        26 => 2,
-                        27 => 3,
-                        _ => brickNew.GetComponent<ItemAddBall>().sumBall
-                    };
-
-                    break;
-                case TypeOfBrick.Damage:
-                    brickNew = Instantiate(listBricks[3]);
-                    indexSprite = Random.Range(22, 24);
-                    brickNew.GetComponent<ItemDamage>().type = indexSprite switch
-                    {
-                        22 => TypeOfBrick.DamageHorizontal,
-                        23 => TypeOfBrick.DamageVertical,
-                        24 => TypeOfBrick.DamageBoth,
-                        _ => brickNew.GetComponent<ItemDamage>().type
-                    };
                     break;
                 case TypeOfBrick.DamageHorizontal:
                     brickNew = Instantiate(listBricks[3]);
-                    indexSprite = 22;
-                    brickNew.GetComponent<ItemDamage>().type = TypeOfBrick.DamageHorizontal;
+                    brickNew.GetComponent<BaseBrick>().SetSprite(TypeOfBrick.DamageHorizontal);
                     break;
                 case TypeOfBrick.DamageVertical:
                     brickNew = Instantiate(listBricks[3]);
-                    indexSprite = 22;
-                    brickNew.GetComponent<ItemDamage>().type = TypeOfBrick.DamageVertical;
+                    brickNew.GetComponent<BaseBrick>().SetSprite(TypeOfBrick.DamageVertical);
                     break;
                 case TypeOfBrick.DamageBoth:
                     brickNew = Instantiate(listBricks[3]);
-                    indexSprite = 22;
-                    brickNew.GetComponent<ItemDamage>().type = TypeOfBrick.DamageBoth;
-                    break;
-                case TypeOfBrick.Fixed:
+                    brickNew.GetComponent<BaseBrick>().SetSprite(TypeOfBrick.DamageBoth);
                     break;
                 case TypeOfBrick.ShootRandom:
                     brickNew = Instantiate(listBricks[5]);
-                    indexSprite = 33;
-                    break;
-                default:
                     break;
             }
 
             if (brickNew)
             {
-                brickNew.GetComponent<BaseBrick>().SetPosition(new Vector2(-2.45f + 0.8f * i, 2.5f - 0.8f * j));
-                // brickNew.GetComponent<SpriteRenderer>().sprite = lsBrickSprites[indexSprite];
-                brickNew.GetComponent<BaseBrick>().OnSpawn(Random.Range(1, 150));
-                brickNew.GetComponent<BaseBrick>().i = i;
-                brickNew.GetComponent<BaseBrick>().j = j;
+                brickNew.transform.SetParent(parentBrick);
+                brickNew.SetPosition(new Vector2(-2.45f + 0.8f * i, 2.5f - 0.8f * j));
+                brickNew.OnSpawn(number);
+                brickNew.typeOfBrick = brickType;
+                brickNew.i = i;
+                brickNew.j = j;
                 lsBrick[i, j] = brickNew;
             }
         }
 
         public void DelBrick(int i, int j)
         {
+            if (lsBrick[i,j].CanDieOnBottom())
+            {
+                GameController.ins.CreaseScore();
+            }
             lsBrick[i, j] = null;
         }
 
@@ -215,21 +167,6 @@ namespace Game.Script
             {
                 for (int i = 0; i < lsBrick.GetLength(0); i++)
                 {
-                    if (lsBrick[i, j])
-                    {
-                        if (lsBrick[i, j].GetComponent<ItemDamage>())
-                        {
-                            if (lsBrick[i, j].GetComponent<ItemDamage>().isOver)
-                                lsBrick[i, j].GetComponent<BaseBrick>().OnDelete();
-                        }
-
-                        if (lsBrick[i, j].GetComponent<ItemShootBall>())
-                        {
-                            if (lsBrick[i, j].GetComponent<ItemShootBall>().isOver)
-                                lsBrick[i, j].GetComponent<BaseBrick>().OnDelete();
-                        }
-                    }
-
                     if (j == 0)
                     {
                         lsBrick[i, j] = null;
@@ -242,26 +179,28 @@ namespace Game.Script
                     if (lsBrick[i, j])
                     {
                         var newPos = new Vector3(-2.45f + 0.8f * i, 2.5f - 0.8f * j, 0);
-                        lsBrick[i, j].GetComponent<BaseBrick>().SetPosition(newPos);
-                        lsBrick[i, j].GetComponent<BaseBrick>().i = i;
-                        lsBrick[i, j].GetComponent<BaseBrick>().j = j;
+                        lsBrick[i, j].UpdatePosition(newPos);
+                        lsBrick[i, j].i = i;
+                        lsBrick[i, j].j = j;
                         if (j == 7)
                         {
                             var item = lsBrick[i, j];
-                            if (item.GetComponent<NormalBrick>() || item.GetComponent<BurstBrick>())
+                            if (item.CanDieOnBottom())
                             {
-                                Debug.Log("END GAME");
+                                GameController.ins.EndGame();
                             }
-
-                            if (lsBrick[i, j].GetComponent<ItemAddBall>())
+                            else
                             {
-                                var itemS = lsBrick[i, j].GetComponent<ItemAddBall>();
-                                var newBall = Instantiate(BallController.ins.addBall);
-                                newBall.transform.position = newPos;
-                                newBall.transform.DOMove(BallController.ins.ballFirstFall.transform.position, 0.3f)
-                                    .OnComplete(() => Destroy(newBall));
-                                BallController.ins.sumAddBall += itemS.sumBall;
-                                itemS.OnDelete();
+                                if (lsBrick[i, j].typeOfBrick == TypeOfBrick.AddBall)
+                                {
+                                    var itemS = lsBrick[i, j].GetComponent<ItemAddBall>();
+                                    var newBall = Instantiate(BallController.ins.addBall);
+                                    newBall.transform.position = newPos;
+                                    newBall.transform.DOMove(BallController.ins.ballFirstFall.transform.position, 0.3f)
+                                        .OnComplete(() => Destroy(newBall));
+                                    BallController.ins.sumAddBall += itemS.sumBall;
+                                    itemS.DestroyBrick();
+                                }
                             }
                         }
                     }
@@ -269,31 +208,33 @@ namespace Game.Script
             }
 
             AddMap();
+            OnEndTurn?.Invoke();
         }
 
-        public void AddMap()
+        private void AddMap()
         {
             if (countRow > lsMap.GetLongLength(0) - 1) return;
-            {
-                for (int i = 0; i < lsBrick.GetLength(0); i++)
-                {
-                    var brickType = (TypeOfBrick)lsMap[lsMap.GetLongLength(0) - 1 - countRow, i];
-                    CreateNewBrick(i, 0, brickType);
-                }
 
-                countRow++;
+            for (int i = 0; i < lsBrick.GetLength(0); i++)
+            {
+                var brickType = (TypeOfBrick)lsMap[lsMap.GetLength(0) - 1 - countRow, i];
+                var number = lsNumber[lsMap.GetLength(0) - 1 - countRow, i];
+                CreateNewBrick(i, 0, brickType, number);
             }
+
+            countRow++;
         }
 
         public bool IsSpecialTurn()
         {
+            if (lsMap.GetLength(0) - countRow <= 3) return false;
             for (int j = lsBrick.GetLength(1) - 1; j >= 3; j--)
             {
                 for (int i = 0; i < lsBrick.GetLength(0); i++)
                 {
                     var item = lsBrick[i, j];
                     if (!item) continue;
-                    if (item.GetComponent<NormalBrick>() || item.GetComponent<BurstBrick>())
+                    if (item.CanDieOnBottom())
                     {
                         return false;
                     }
@@ -304,38 +245,31 @@ namespace Game.Script
         }
 
 
-        public void OnDamageHor(int hor)
+        private void OnDamageHor(int hor)
         {
             for (int i = 0; i < lsBrick.GetLength(0); i++)
             {
-                var brickType = (TypeOfBrick)lsMap[hor, i];
-                if (brickType != TypeOfBrick.Empty && brickType != TypeOfBrick.AddBall)
+                if (!lsBrick[i, hor]) continue;
+                if (lsBrick[i, hor].CanDieOnBottom())
                 {
-                    if (lsBrick[i, hor].GetComponent<BaseBrick>())
-                    {
-                        lsBrick[i, hor].GetComponent<BaseBrick>().OnDamage();
-                    }
+                    lsBrick[i, hor].TakeDamage();
                 }
             }
         }
 
-        public void OnDamageVer(int ver)
+        private void OnDamageVer(int ver)
         {
             for (int i = 0; i < lsBrick.GetLength(1); i++)
             {
-                var brickType = (TypeOfBrick)lsMap[i, ver];
-                if (brickType != TypeOfBrick.Empty && brickType != TypeOfBrick.AddBall)
+                if (!lsBrick[ver, i]) continue;
+                if (!lsBrick[ver, i].CanDieOnBottom())
                 {
-                    if (!lsBrick[ver, i]) continue;
-                    if (lsBrick[ver, i].GetComponent<BaseBrick>())
-                    {
-                        lsBrick[ver, i].GetComponent<BaseBrick>().OnDamage();
-                    }
+                    lsBrick[ver, i].TakeDamage();
                 }
             }
         }
 
-        public void OnDamageBoth(int hor, int ver)
+        private void OnDamageBoth(int hor, int ver)
         {
             OnDamageHor(hor);
             OnDamageVer(ver);
@@ -363,32 +297,104 @@ namespace Game.Script
 
         private void ShowFxVer(Vector2 position)
         {
-            var fx2 = Instantiate(fxDamageVer);
-            fx2.transform.position = position;
-            Destroy(fx2, 0.3f);
+            var fxVer = Instantiate(fxDamageVer);
+            fxVer.transform.position = position;
+            Destroy(fxVer, 0.3f);
         }
 
         private void ShowFxHor(Vector2 position)
         {
-            var fx = Instantiate(fxDamage);
-            fx.transform.position = position;
-            Destroy(fx, 0.3f);
+            var fxHor = Instantiate(fxDamage);
+            fxHor.transform.position = position;
+            Destroy(fxHor, 0.3f);
         }
 
-        public void OnBurst(int hor, int ver)
+        private void ShowFxBurstHor(Vector2 position)
+        {
+            var fxHor = Instantiate(fxBurstHor);
+            fxHor.transform.position = position;
+            Destroy(fxHor, 0.3f);
+        }
+
+        private void ShowFxBurstVer(Vector2 position)
+        {
+            var fxVer = Instantiate(fxBurstVer);
+            fxVer.transform.position = position;
+            Destroy(fxVer, 0.3f);
+        }
+
+        private void ShowFxBurstSur(Vector2 position)
+        {
+            var fxSur = Instantiate(fxBurstSur);
+            fxSur.transform.position = position;
+            Destroy(fxSur, 0.5f);
+        }
+
+        private void OnBurstHor(int hor)
         {
             for (int i = 0; i < lsBrick.GetLength(0); i++)
             {
-                var brickType = (TypeOfBrick)lsMap[hor, i];
-                if (brickType == TypeOfBrick.Normal || brickType == TypeOfBrick.Triangle ||
-                    brickType == TypeOfBrick.DeleteHorizontal)
+                if (!lsBrick[i, hor]) continue;
+                if (lsBrick[i, hor].CanDieOnBottom())
                 {
-                    if (!lsBrick[i, hor]) continue;
-                    if (lsBrick[i, hor].GetComponent<BaseBrick>())
+                    lsBrick[i, hor].DestroyBrick();
+                }
+            }
+        }
+
+        private void OnBurstVer(int ver)
+        {
+            for (int i = 0; i < lsBrick.GetLength(1); i++)
+            {
+                if (!lsBrick[ver, i]) continue;
+                if (lsBrick[ver, i].CanDieOnBottom())
+                {
+                    lsBrick[ver, i].DestroyBrick();
+                }
+            }
+        }
+
+        private void OnBurstBoth(int hor, int ver)
+        {
+            OnBurstHor(hor);
+            OnBurstVer(ver);
+        }
+
+        private void OnBurstSurround(int hor, int ver)
+        {
+            for (int i = hor - 1; i <= hor + 1; i++)
+            {
+                for (int j = ver - 1; j <= ver + 1; j++)
+                {
+                    if (lsBrick[i, j])
                     {
-                        lsBrick[i, hor].GetComponent<BaseBrick>().OnDelete();
+                        lsBrick[i, j].DestroyBrick();
                     }
                 }
+            }
+        }
+
+        public void OnBurst(Vector2 position, int hor, int ver, TypeOfBrick type)
+        {
+            switch (type)
+            {
+                case TypeOfBrick.DeleteHorizontal:
+                    OnBurstHor(hor);
+                    ShowFxBurstHor(position);
+                    break;
+                case TypeOfBrick.DeleteVertical:
+                    OnBurstVer(ver);
+                    ShowFxBurstVer(position);
+                    break;
+                case TypeOfBrick.DeleteBoth:
+                    OnBurstBoth(hor, ver);
+                    ShowFxBurstHor(position);
+                    ShowFxBurstVer(position);
+                    break;
+                case TypeOfBrick.DeleteSurround:
+                    OnBurstSurround(hor, ver);
+                    ShowFxBurstSur(position);
+                    break;
             }
         }
     }

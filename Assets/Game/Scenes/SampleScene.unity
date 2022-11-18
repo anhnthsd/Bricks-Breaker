@@ -1056,6 +1056,7 @@ MonoBehaviour:
     m_Bits: 128
   ballFirstFall: {fileID: 0}
   sumAddBall: 0
+  fxSpecialBall: {fileID: 854858744462582526, guid: 9f83df38ea4b1194c82490c0c94c7c29, type: 3}
 --- !u!114 &904039073
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1070,52 +1071,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 519420031}
   listBricks:
-  - {fileID: 1173261618818375393, guid: 70957de9c61167c4fb74f5aa7e01dd4c, type: 3}
-  - {fileID: 7711725011686797201, guid: 66945d4d52a732844a2d5c1a5836878c, type: 3}
-  - {fileID: 2197373534753914578, guid: b5a2266acfbd7cd4dad03a6103b9832a, type: 3}
-  - {fileID: 2197373534753914578, guid: dee4286e59648b84cb6bb023e9165306, type: 3}
-  - {fileID: 1173261618818375393, guid: 8e529a2224e6dc24687eb6ebc208a72b, type: 3}
-  - {fileID: 2197373534753914578, guid: 483520b9fbc9dfe4799290b399d5a3b7, type: 3}
-  lsBrickSprites:
-  - {fileID: 21300000, guid: 19c8ee20efa54f142aeb5789690f191d, type: 3}
-  - {fileID: 21300000, guid: e584443750f60214c9d54adbbde19672, type: 3}
-  - {fileID: 21300000, guid: dad0b332f11b7e84eb8105f2cf557b06, type: 3}
-  - {fileID: 21300000, guid: 7c0180626ce862e44b5de6e3a5c65263, type: 3}
-  - {fileID: 21300000, guid: dee3c3dfb2a3d5d45b9b8e0fa81cb993, type: 3}
-  - {fileID: 21300000, guid: 7e8cf632b9e04bc4db733757cada8aaf, type: 3}
-  - {fileID: 21300000, guid: 7e8cf632b9e04bc4db733757cada8aaf, type: 3}
-  - {fileID: 21300000, guid: ab795291e7491364383245ef245c408f, type: 3}
-  - {fileID: 21300000, guid: e7ca0102a0f649b499ad75915faece29, type: 3}
-  - {fileID: 21300000, guid: 322e55992639db242b30a5901c81e695, type: 3}
-  - {fileID: 21300000, guid: 0a9fb5053fb6e434c98c4e1290492da6, type: 3}
-  - {fileID: 21300000, guid: 4444aa1af15264b4185020bc54145d41, type: 3}
-  - {fileID: 21300000, guid: eec086be14c7f9c4d9b5dd7a09e499c1, type: 3}
-  - {fileID: 21300000, guid: 73b8d610f61178344b8f44fa18585bd0, type: 3}
-  - {fileID: 21300000, guid: 46b841b134b92bf4dbf3045039cf3aae, type: 3}
-  - {fileID: 21300000, guid: 075ddd0c9f639b349ac0f7bf80e1f970, type: 3}
-  - {fileID: 21300000, guid: 2f5854ea0e56f9f47afc99902112d7a3, type: 3}
-  - {fileID: 21300000, guid: 7fd6fcf484f82eb409f03809bb6a8d3c, type: 3}
-  - {fileID: 21300000, guid: ca9f2eee2959a1546ba2a5c0e086e89c, type: 3}
-  - {fileID: 21300000, guid: 0b5c002af108b034a8ee7a5705463e96, type: 3}
-  - {fileID: 21300000, guid: 5954c2f53e9e3494787513bfbabb9cfe, type: 3}
-  - {fileID: 21300000, guid: aa6be5a0fe6044f4ca1c41439b5539e5, type: 3}
-  - {fileID: 21300000, guid: 5b7b4f91e1ccf42488e97166cc380b59, type: 3}
-  - {fileID: 21300000, guid: 84fbbbdc8a47c4d4685ea278a88ea430, type: 3}
-  - {fileID: 21300000, guid: 2e7b72cf42462ad47b3e87370b39a7cd, type: 3}
-  - {fileID: 21300000, guid: e56fbfe953501c94e8990372d7dceec9, type: 3}
-  - {fileID: 21300000, guid: da4996fa58262254ca490f4e57f61ddc, type: 3}
-  - {fileID: 21300000, guid: 14dfa24caf52eb74689696cb188cdc68, type: 3}
-  - {fileID: 21300000, guid: d6acf35fc5ba4974e9a7cbd5520823f6, type: 3}
-  - {fileID: 21300000, guid: 382c60fe76ddc2e40b0c0269ae95b48b, type: 3}
-  - {fileID: 21300000, guid: 61392d6cffdcac048bc4525731058596, type: 3}
-  - {fileID: 21300000, guid: e86e72998af3b244e9c85f5d27679e2c, type: 3}
-  - {fileID: 21300000, guid: 11c156a100186ac4d872ee5ebe78b46d, type: 3}
-  - {fileID: 21300000, guid: d6acf35fc5ba4974e9a7cbd5520823f6, type: 3}
+  - {fileID: -1468402543422352644, guid: 70957de9c61167c4fb74f5aa7e01dd4c, type: 3}
+  - {fileID: -6618776134101572688, guid: 66945d4d52a732844a2d5c1a5836878c, type: 3}
+  - {fileID: -3705476221959361384, guid: b5a2266acfbd7cd4dad03a6103b9832a, type: 3}
+  - {fileID: 8256834727875070995, guid: dee4286e59648b84cb6bb023e9165306, type: 3}
+  - {fileID: -7122599822707796684, guid: 8e529a2224e6dc24687eb6ebc208a72b, type: 3}
+  - {fileID: -6292012947590596475, guid: 483520b9fbc9dfe4799290b399d5a3b7, type: 3}
+  parentBrick: {fileID: 1805797469}
   textPrefab: {fileID: 8850910237983638310, guid: 967de43ba9c3e4840a67864cfd8ba781, type: 3}
   parentText: {fileID: 149519196}
-  fxBrick: {fileID: 854858744462582526, guid: 5b3109f610cc31746a19a5e7b92d4bdc, type: 3}
   fxDamage: {fileID: 5343811173839887693, guid: 8092e8e4296a06e42976f755d3729af4, type: 3}
   fxDamageVer: {fileID: 5343811173839887693, guid: bfb581d3ef3118741af6926fdf5b7cea, type: 3}
+  fxBurstHor: {fileID: 847128145465177892, guid: 1532e3f52b2117544894c514f9401666, type: 3}
+  fxBurstVer: {fileID: 847128145465177892, guid: 14373d40b1cb99b428888159787c3421, type: 3}
+  fxBurstSur: {fileID: 854858744462582526, guid: 9c3162873bd943840b43f556bb1ddebf, type: 3}
   countRow: 4
 --- !u!1 &970168735
 GameObject:
@@ -1484,6 +1453,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fxWall: {fileID: 854858744462582526, guid: a5d6c71c17655324288de9f037872556, type: 3}
+--- !u!1 &1805797468
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1805797469}
+  m_Layer: 0
+  m_Name: BrickParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1805797469
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1805797468}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.6447619, y: -0.4379829, z: -0.051829305}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1886419196
 GameObject:
   m_ObjectHideFlags: 0

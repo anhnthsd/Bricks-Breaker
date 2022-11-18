@@ -11,8 +11,6 @@ namespace Game.Script
         public int hpBrick;
         public TextMeshProUGUI textBrick;
         public GameObject fxBrick;
-        public GameObject fxBurstHor;
-        public GameObject fxBurstVer;
         public List<Sprite> lsBrickSprites;
 
         public override void OnSpawn(int hp)
@@ -33,7 +31,7 @@ namespace Game.Script
                     srBrick.sprite = lsBrickSprites[2];
                     break;
                 case TypeOfBrick.DeleteBoth:
-                    srBrick.sprite = lsBrickSprites[2];
+                    srBrick.sprite = lsBrickSprites[3];
                     break;
                 default:
                     srBrick.sprite = lsBrickSprites[0];
@@ -41,14 +39,20 @@ namespace Game.Script
             }
         }
 
-        public override void OnDelete()
+        public void TakeItemBurst()
         {
-            gameObject.SetActive(false);
-            textBrick.gameObject.SetActive(false);
-            BrickController.ins.DelBrick(i, j);
+            DestroyBrick();
         }
 
         public override void SetPosition(Vector2 pos)
+        {
+            transform.position = pos;
+            textBrick = Instantiate(BrickController.ins.textPrefab);
+            textBrick.GetComponent<RectTransform>().anchoredPosition = GameController.ins.cam.WorldToScreenPoint(pos);
+            textBrick.transform.SetParent(BrickController.ins.parentText);
+        }
+
+        public override void UpdatePosition(Vector2 pos)
         {
             transform.position = pos;
             textBrick.transform.SetParent(null);
@@ -62,23 +66,26 @@ namespace Game.Script
             {
                 var fx = Instantiate(fxBrick);
                 fx.transform.position = transform.position;
-                OnDamage();
+                TakeDamage();
                 Destroy(fx, 0.3f);
             }
         }
 
-        public override void OnDamage()
+        public override void TakeDamage()
         {
             hpBrick--;
             textBrick.text = hpBrick.ToString();
             if (hpBrick == 0)
             {
-                OnDelete();
-                BrickController.ins.OnBurst(j, i);
-                var fx = Instantiate(fxBurstHor);
-                fx.transform.position = transform.position;
-                Destroy(fx, 0.3f);
+                DestroyBrick();
             }
+        }
+
+        public override void DestroyBrick()
+        {
+            base.DestroyBrick();
+            textBrick.gameObject.SetActive(false);
+            BrickController.ins.OnBurst(transform.position, j, i, type);
         }
     }
 }

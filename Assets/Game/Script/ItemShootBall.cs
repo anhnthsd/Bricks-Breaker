@@ -9,22 +9,45 @@ namespace Game.Script
     {
         public bool isOver = false;
 
+        private void OnEnable()
+        {
+            BrickController.OnEndTurn += OnEndTurn;
+        }
+
+        private void OnDisable()
+        {
+            BrickController.OnEndTurn -= OnEndTurn;
+        }
+        
         public override void OnSpawn(int hp)
         {
             colBrick.isTrigger = true;
+        }
+        
+        public override void OnEndTurn()
+        {
+            if (isOver)
+            {
+                gameObject.SetActive(false);
+                BrickController.ins.DelBrick(i, j);
+            }
+            else
+            {
+                //di xuong
+            }
         }
 
         public override void SetSprite(TypeOfBrick type)
         {
         }
 
-        public override void OnDelete()
+        public void TakeItemBurst()
         {
             gameObject.SetActive(false);
             BrickController.ins.DelBrick(i, j);
         }
 
-        public override void OnDamage()
+        public override void TakeDamage()
         {
         }
 
@@ -32,6 +55,11 @@ namespace Game.Script
         {
             transform.position = pos;
         }
+        public override void UpdatePosition(Vector2 pos)
+        {
+            transform.position = pos;
+        }
+
 
         private void OnTriggerEnter2D(Collider2D col)
         {

@@ -107,7 +107,7 @@ MonoBehaviour:
   textBrick: {fileID: 0}
   fxBrick: {fileID: 854858744462582526, guid: 5b3109f610cc31746a19a5e7b92d4bdc, type: 3}
   fxBurstHor: {fileID: 847128145465177892, guid: 1532e3f52b2117544894c514f9401666, type: 3}
-  fxBurstVer: {fileID: 847128145465177892, guid: 1532e3f52b2117544894c514f9401666, type: 3}
+  fxBurstVer: {fileID: 847128145465177892, guid: 14373d40b1cb99b428888159787c3421, type: 3}
   lsBrickSprites:
   - {fileID: 21300000, guid: 11c156a100186ac4d872ee5ebe78b46d, type: 3}
   - {fileID: 21300000, guid: 382c60fe76ddc2e40b0c0269ae95b48b, type: 3}

@@ -9,7 +9,7 @@ namespace Game.Script
     {
         public int sumBall = 1;
         public List<Sprite> lsBrickSprites;
-
+        
         public override void OnSpawn(int hp)
         {
             colBrick.isTrigger = true;
@@ -34,19 +34,28 @@ namespace Game.Script
             }
         }
 
-        public override void OnDelete()
+        public void TakeItemBurst()
         {
             gameObject.SetActive(false);
             BrickController.ins.DelBrick(i, j);
         }
 
-        public override void OnDamage()
+        public override void TakeDamage()
         {
         }
 
         public override void SetPosition(Vector2 pos)
         {
             transform.position = pos;
+        }
+        public override void UpdatePosition(Vector2 pos)
+        {
+            transform.position = pos;
+        }
+
+        public override void OnEndTurn()
+        {
+            
         }
 
         private void OnTriggerEnter2D(Collider2D col)
@@ -57,7 +66,7 @@ namespace Game.Script
         public void AddBall(int count, Vector3 pos)
         {
             BallController.ins.OnAddBall(count, pos);
-            OnDelete();
+            TakeItemBurst();
         }
     }
 }

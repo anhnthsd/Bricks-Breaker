@@ -14,7 +14,7 @@ namespace Game.Script
 
         public override void OnSpawn(int hp)
         {
-            this.hpBrick = hp;
+            hpBrick = hp;
             textBrick.text = hp.ToString();
             SetSprite(TypeOfBrick.Normal);
         }
@@ -29,31 +29,31 @@ namespace Game.Script
             {
                 srBrick.sprite = lsBrickSprites[1];
             }
-            else if (hpBrick < 5)
+            else if (hpBrick <= 5)
             {
                 srBrick.sprite = lsBrickSprites[2];
             }
-            else if (hpBrick < 10)
+            else if (hpBrick <= 10)
             {
                 srBrick.sprite = lsBrickSprites[3];
             }
-            else if (hpBrick < 20)
+            else if (hpBrick <= 20)
             {
                 srBrick.sprite = lsBrickSprites[4];
             }
-            else if (hpBrick < 30)
+            else if (hpBrick <= 30)
             {
                 srBrick.sprite = lsBrickSprites[5];
             }
-            else if (hpBrick < 50)
+            else if (hpBrick <= 50)
             {
                 srBrick.sprite = lsBrickSprites[6];
             }
-            else if (hpBrick < 70)
+            else if (hpBrick <= 70)
             {
                 srBrick.sprite = lsBrickSprites[7];
             }
-            else if (hpBrick < 90)
+            else if (hpBrick <= 90)
             {
                 srBrick.sprite = lsBrickSprites[8];
             }
@@ -67,14 +67,20 @@ namespace Game.Script
             }
         }
 
-        public override void OnDelete()
+        public void TakeItemBurst()
         {
-            gameObject.SetActive(false);
-            textBrick.gameObject.SetActive(false);
-            BrickController.ins.DelBrick(i, j);
+            DestroyBrick();
         }
 
         public override void SetPosition(Vector2 pos)
+        {
+            transform.position = pos;
+            textBrick = Instantiate(BrickController.ins.textPrefab);
+            textBrick.GetComponent<RectTransform>().anchoredPosition = GameController.ins.cam.WorldToScreenPoint(pos);
+            textBrick.transform.SetParent(BrickController.ins.parentText);
+        }
+
+        public override void UpdatePosition(Vector2 pos)
         {
             transform.position = pos;
             textBrick.transform.SetParent(null);
@@ -88,19 +94,25 @@ namespace Game.Script
             {
                 var fx = Instantiate(fxBrick);
                 fx.transform.position = transform.position;
-                OnDamage();
+                TakeDamage();
                 Destroy(fx, 0.3f);
             }
         }
 
-        public override void OnDamage()
+        public override void TakeDamage()
         {
             hpBrick--;
             textBrick.text = hpBrick.ToString();
             if (hpBrick == 0)
             {
-                OnDelete();
+                DestroyBrick();
             }
+        }
+
+        public override void DestroyBrick()
+        {
+            base.DestroyBrick();
+            textBrick.gameObject.SetActive(false);
         }
     }
 }

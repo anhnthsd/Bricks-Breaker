@@ -7,11 +7,33 @@ namespace Game.Script
 {
     public class ItemDamage : BaseBrick
     {
-        public TypeOfBrick type = TypeOfBrick.DamageHorizontal;
         public GameObject fxDamageHor;
         public GameObject fxDamageVer;
         public bool isOver = false;
         public List<Sprite> lsBrickSprites;
+
+        private void OnEnable()
+        {
+            BrickController.OnEndTurn += OnEndTurn;
+        }
+
+        private void OnDisable()
+        {
+            BrickController.OnEndTurn -= OnEndTurn;
+        }
+
+        public override void OnEndTurn()
+        {
+            if (isOver)
+            {
+                gameObject.SetActive(false);
+                BrickController.ins.DelBrick(i, j);
+            }
+            else
+            {
+                //di xuong
+            }
+        }
 
         public override void OnSpawn(int hp)
         {
@@ -20,7 +42,7 @@ namespace Game.Script
 
         public override void SetSprite(TypeOfBrick type)
         {
-            this.type = type;
+            this.typeOfBrick = type;
             switch (type)
             {
                 case TypeOfBrick.DamageHorizontal:
@@ -29,16 +51,13 @@ namespace Game.Script
                 case TypeOfBrick.DamageVertical:
                     srBrick.sprite = lsBrickSprites[2];
                     break;
-                case TypeOfBrick.DamageBoth:
-                    srBrick.sprite = lsBrickSprites[2];
-                    break;
                 default:
                     srBrick.sprite = lsBrickSprites[0];
                     break;
             }
         }
 
-        public override void OnDelete()
+        public void TakeItemBurst()
         {
             gameObject.SetActive(false);
             BrickController.ins.DelBrick(i, j);
@@ -48,15 +67,19 @@ namespace Game.Script
         {
             transform.position = pos;
         }
+        public override void UpdatePosition(Vector2 pos)
+        {
+            transform.position = pos;
+        }
 
-        public override void OnDamage()
+        public override void TakeDamage()
         {
         }
 
         private void OnTriggerEnter2D(Collider2D col)
         {
             isOver = true;
-            BrickController.ins.OnDamage(transform.position, type, j, i);
+            BrickController.ins.OnDamage(transform.position, typeOfBrick, j, i);
         }
     }
 }

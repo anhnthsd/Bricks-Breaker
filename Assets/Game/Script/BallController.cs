@@ -24,6 +24,7 @@ namespace Game.Script
         private Coroutine _corShootBall;
 
         public GameObject fxSpecialBall;
+
         private void Awake()
         {
             ins = this;
@@ -48,8 +49,16 @@ namespace Game.Script
                 isFly = true;
                 var point = GameController.ins.cam.ScreenToWorldPoint(Input.mousePosition);
                 point.z = 0;
+
                 var ballPos = lsBalls[0].transform.position;
                 Vector2 direction = new Vector2(point.x - ballPos.x, point.y - ballPos.y);
+
+                if (point.y < -3f)
+                {
+                    var anchor = point.x < ballPos.x ? new Vector3(-2.5f, -3f, 0) : new Vector3(2.5f, -3f, 0);
+                    direction = anchor - ballPos;
+                }
+
                 for (int i = 0; i < listDirecBall.Count; i++)
                 {
                     if (listDirecBall[i].activeInHierarchy)
@@ -64,7 +73,20 @@ namespace Game.Script
                 var point = GameController.ins.cam.ScreenToWorldPoint(Input.mousePosition);
                 point.z = 0;
                 var posStart = lsBalls[0].transform.position;
-                Vector2 direction = new Vector2(point.x - posStart.x, point.y - posStart.y);
+
+                Vector2 direction = point - posStart;
+
+                if (point.y < -3f)
+                {
+                    var anchor = point.x < posStart.x ? new Vector3(-2.5f, -3f, 0) : new Vector3(2.5f, -3f, 0);
+                    direction = anchor - posStart;
+                }
+                // var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                //
+                // if (angle < 10 || angle > 170)
+                // {
+                //     return;
+                // }
 
                 var ray = Physics2D.Raycast(posStart, direction, 20, wallMask);
                 bool check = true;
@@ -234,9 +256,20 @@ namespace Game.Script
         {
             var fx = Instantiate(fxSpecialBall);
             fx.transform.position = lsBalls[0].transform.position;
-            Destroy(fx,1);
+            Destroy(fx, 1);
+            CreateBall(countAddBall,lsBalls[0].transform.position);
         }
-        
+
+        public void AfterSpecialTurn(int countAddBall)
+        {
+            for (int i = 0; i < countAddBall; i++)
+            {
+                Destroy(lsBalls[lsBalls.Count - 1 - i]);
+                lsBalls.RemoveAt(lsBalls.Count - 1 - i);
+                
+            }
+        }
+
         public void OnAddBall(int count, Vector3 pos)
         {
             sumAddBall += count;
