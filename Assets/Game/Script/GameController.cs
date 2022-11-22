@@ -7,11 +7,7 @@ namespace Game.Script
     {
         public static GameController ins;
         public Camera cam;
-        public int score = 0;
-        
-        private int brickOnTurn = 0;
-        private int sumballSpecial = 9;
-        private bool isSpecialTurn = false;
+        public BaseModePlay currentMode;
 
         private void Awake()
         {
@@ -21,47 +17,37 @@ namespace Game.Script
         private void Start()
         {
             cam = Camera.main;
+            PlayGame();
+        }
+
+        public void PlayGame()
+        {
+            currentMode.StartGame();
         }
 
         public void AfterTurn()
         {
-            brickOnTurn = 0;
-            if (isSpecialTurn)
-            {
-                BallController.ins.AfterSpecialTurn(sumballSpecial);
-                isSpecialTurn = false;
-            }
-            BrickController.ins.AfterTurn();
-
-            BallController.ins.AfterTurn();
-
-            if (BrickController.ins.IsSpecialTurn())
-            {
-                Debug.Log("Special");
-                isSpecialTurn = true;
-                SpecialTurn(2);
-            }
+            currentMode.AfterTurn();
         }
 
         public void SpecialTurn(int rows = 1)
         {
-            for (int r = 0; r < rows; r++)
-            {
-                DOVirtual.DelayedCall(0.2f, () => { BrickController.ins.AfterTurn(); });
-            }
-
-            BallController.ins.SpecialTurn(sumballSpecial);
+            currentMode.SpecialTurn(rows);
         }
 
         public void EndGame()
         {
-            Debug.Log("ENDGAME");
+            currentMode.EndGame();
         }
 
-        public void CreaseScore()
+        public void IncreaseScore()
         {
-            brickOnTurn++;
-            score += 10 * brickOnTurn;
+            currentMode.IncreaseScore();
+        }
+
+        public int GetScore()
+        {
+            return currentMode.Score;
         }
     }
 }

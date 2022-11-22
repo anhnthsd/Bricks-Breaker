@@ -10,7 +10,7 @@ namespace Game.Script
     public class BallController : MonoBehaviour
     {
         public static BallController ins;
-        private bool isFly = false;
+        private bool isFly = false; 
         public BallScript ball;
         public GameObject direcBall;
         public GameObject addBall;
@@ -30,10 +30,10 @@ namespace Game.Script
             ins = this;
         }
 
-        private void Start()
+        public void Play()
         {
             CreateBall(10, new Vector2(0, -3.33f));
-            CreateDirecBall(10, new Vector2(0, -3.33f));
+            CreateDotBall(10, new Vector2(0, -3.33f));
         }
 
         void Update()
@@ -208,7 +208,7 @@ namespace Game.Script
             }
         }
 
-        public void CreateDirecBall(int ballCount, Vector2 position)
+        public void CreateDotBall(int ballCount, Vector2 position)
         {
             for (int i = 0; i < ballCount; i++)
             {
@@ -264,9 +264,8 @@ namespace Game.Script
         {
             for (int i = 0; i < countAddBall; i++)
             {
-                Destroy(lsBalls[lsBalls.Count - 1 - i]);
+                lsBalls[lsBalls.Count - 1 - i].gameObject.SetActive(false);
                 lsBalls.RemoveAt(lsBalls.Count - 1 - i);
-                
             }
         }
 

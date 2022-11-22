@@ -98,10 +98,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb66f74d33604182ad551437339e2f9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  typeOfBrick: 0
   srBrick: {fileID: 3475107341369301004}
   colBrick: {fileID: 372877907782395599}
   i: 0
   j: 0
+  isOver: 0
 --- !u!58 &372877907782395599
 CircleCollider2D:
   m_ObjectHideFlags: 0

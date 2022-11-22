@@ -24,45 +24,12 @@ namespace Game.Script
         public GameObject fxBurstVer;
         public GameObject fxBurstSur;
 
-        public int countRow = 4;
+        private int _currentRow;
 
         public static event Action OnEndTurn;
+        private int[,] _lsMap;
+        private int[,] _lsNumber;
 
-        public int[,] lsMap = new int[,]
-        {
-            { 1, 1, 1, 1, 1, 1, 1 },
-            { 0, 1, 1, 1, 1, 1, 1 },
-            { 0, 2, 1, 1, 1, 1, 1 },
-            { 0, 1, 1, 1, 1, 1, 1 },
-            { 4, 1, 1, 1, 3, 1, 1 },
-            { 0, 1, 1, 1, 1, 1, 1 },
-            { 0, 1, 1, 1, 1, 1, 1 },
-            { 1, 1, 1, 2, 1, 1, 1 },
-            { 0, 1, 1, 1, 1, 1, 1 },
-            { 0, 1, 1, 1, 1, 1, 1 },
-            { 0, 1, 1, 1, 1, 3, 1 },
-            { 0, 0, 3, 0, 1, 3, 1 },
-            { 7, 8, 9, 10, 11, 1, 1 },
-            { 0, 1, 2, 1, 1, 5, 1 },
-        };
-
-        public int[,] lsNumber = new int[,]
-        {
-            { 1, 1, 1, 1, 1, 1, 1 },
-            { 0, 1, 1, 1, 2, 1, 1 },
-            { 0, 2, 1, 3, 1, 1, 2 },
-            { 0, 1, 1, 1, 2, 3, 1 },
-            { 4, 1, 3, 1, 1, 1, 1 },
-            { 0, 1, 1, 1, 1, 1, 1 },
-            { 0, 1, 1, 1, 3, 1, 2 },
-            { 1, 1, 1, 1, 1, 1, 1 },
-            { 3, 1, 3, 1, 1, 1, 2 },
-            { 1, 1, 1, 1, 1, 1, 1 },
-            { 1, 3, 1, 3, 2, 1, 3 },
-            { 1, 2, 1, 1, 1, 1, 1 },
-            { 1, 1, 100, 100, 100, 100, 10 },
-            { 100, 2, 1, 1, 1, 1, 3 },
-        };
 
         private void Awake()
         {
@@ -72,22 +39,42 @@ namespace Game.Script
         private void Start()
         {
             cam = Camera.main;
-
-            CreateBrick();
         }
 
-        public void CreateBrick()
+        public void CreateBrickWithMap(int[,] lsMap, int[,] lsNumber, int rows)
         {
+            _lsMap = lsMap;
+            _lsNumber = lsNumber;
+            _currentRow = rows;
             lsBrick = new BaseBrick[lsMap.GetLongLength(1), lsMap.GetLongLength(0)];
-            if (countRow > lsMap.GetLongLength(0) - 1) return;
-            for (int j = 0; j < countRow; j++)
+            if (_currentRow > lsMap.GetLongLength(0) - 1) return;
+            for (int j = 0; j < _currentRow; j++)
             {
-                for (int i = 0; i < lsBrick.GetLongLength(0); i++)
-                {
-                    var brickType = (TypeOfBrick)lsMap[lsMap.GetLongLength(0) - (countRow - j), i];
-                    var number = lsNumber[lsMap.GetLongLength(0) - (countRow - j), i];
-                    CreateNewBrick(i, j, brickType, number);
-                }
+                AddRowBrick(j);
+            }
+        }
+
+        public void CreateBrick(int rows)
+        {
+            _lsMap = new int[10, 7];
+            _lsNumber = new int[10, 7];
+            _currentRow = rows;
+            lsBrick = new BaseBrick[_lsMap.GetLongLength(1), _lsMap.GetLongLength(0)];
+            if (_currentRow > _lsMap.GetLongLength(0) - 1) return;
+            for (int j = 0; j < _currentRow; j++)
+            {
+                AddRowBrick(j);
+            }
+        }
+
+        public void AddRowBrick(int row)
+        {
+            for (int i = 0; i < lsBrick.GetLength(0); i++)
+            {
+                int index = row % _lsMap.GetLength(0);
+                int number = row < 10 ? Random.Range(1, 6) : Random.Range(7, 20);
+                TypeOfBrick brickType = (TypeOfBrick)Random.Range(0, 11);
+                CreateNewBrick(i, row, brickType, number);
             }
         }
 
@@ -154,10 +141,11 @@ namespace Game.Script
 
         public void DelBrick(int i, int j)
         {
-            if (lsBrick[i,j].CanDieOnBottom())
+            if (lsBrick[i, j].CanDieOnBottom())
             {
-                GameController.ins.CreaseScore();
+                GameController.ins.IncreaseScore();
             }
+
             lsBrick[i, j] = null;
         }
 
@@ -213,21 +201,21 @@ namespace Game.Script
 
         private void AddMap()
         {
-            if (countRow > lsMap.GetLongLength(0) - 1) return;
+            if (_currentRow > _lsMap.GetLongLength(0) - 1) return;
 
             for (int i = 0; i < lsBrick.GetLength(0); i++)
             {
-                var brickType = (TypeOfBrick)lsMap[lsMap.GetLength(0) - 1 - countRow, i];
-                var number = lsNumber[lsMap.GetLength(0) - 1 - countRow, i];
+                var brickType = (TypeOfBrick)_lsMap[_lsMap.GetLength(0) - 1 - _currentRow, i];
+                var number = _lsNumber[_lsMap.GetLength(0) - 1 - _currentRow, i];
                 CreateNewBrick(i, 0, brickType, number);
             }
 
-            countRow++;
+            _currentRow++;
         }
 
         public bool IsSpecialTurn()
         {
-            if (lsMap.GetLength(0) - countRow <= 3) return false;
+            if (_lsMap.GetLength(0) - _currentRow <= 3) return false;
             for (int j = lsBrick.GetLength(1) - 1; j >= 3; j--)
             {
                 for (int i = 0; i < lsBrick.GetLength(0); i++)
