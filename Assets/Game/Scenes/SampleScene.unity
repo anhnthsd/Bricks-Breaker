@@ -375,7 +375,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 267873007}
         m_TargetAssemblyTypeName: Game.Script.BallController, Assembly-CSharp
         m_MethodName: Btn
         m_Mode: 1
@@ -737,7 +737,6 @@ MonoBehaviour:
   fxBurstHor: {fileID: 847128145465177892, guid: 1532e3f52b2117544894c514f9401666, type: 3}
   fxBurstVer: {fileID: 847128145465177892, guid: 14373d40b1cb99b428888159787c3421, type: 3}
   fxBurstSur: {fileID: 854858744462582526, guid: 9c3162873bd943840b43f556bb1ddebf, type: 3}
-  countRow: 4
 --- !u!1 &432545095
 GameObject:
   m_ObjectHideFlags: 0
@@ -1054,7 +1053,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &862264935
 Transform:
   m_ObjectHideFlags: 0
@@ -1084,6 +1083,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bacd8035dfb5c147a29c1741ef3a3dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentRow: 0
   startBall: 10
   ballController: {fileID: 267873007}
   brickController: {fileID: 1262549753}
@@ -1144,7 +1144,7 @@ MonoBehaviour:
     m_Bits: 128
   ballFirstFall: {fileID: 0}
   sumAddBall: 0
-  fxSpecialBall: {fileID: 854858744462582526, guid: 9f83df38ea4b1194c82490c0c94c7c29, type: 3}
+  fxSpecialBall: {fileID: 5471838519779563488, guid: 09243099090d38a44a1d350829b5f6fc, type: 3}
 --- !u!1 &904039068
 GameObject:
   m_ObjectHideFlags: 0
@@ -1192,7 +1192,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 519420031}
-  currentMode: {fileID: 862264936}
+  currentMode: {fileID: 1606742277}
 --- !u!1 &970168735
 GameObject:
   m_ObjectHideFlags: 0
@@ -1356,7 +1356,6 @@ MonoBehaviour:
   fxBurstHor: {fileID: 847128145465177892, guid: 1532e3f52b2117544894c514f9401666, type: 3}
   fxBurstVer: {fileID: 847128145465177892, guid: 14373d40b1cb99b428888159787c3421, type: 3}
   fxBurstSur: {fileID: 854858744462582526, guid: 9c3162873bd943840b43f556bb1ddebf, type: 3}
-  countRow: 4
 --- !u!1 &1476630970
 GameObject:
   m_ObjectHideFlags: 0
@@ -1481,7 +1480,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1606742276
 Transform:
   m_ObjectHideFlags: 0
@@ -1508,13 +1507,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1606742275}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8bacd8035dfb5c147a29c1741ef3a3dd, type: 3}
+  m_Script: {fileID: 11500000, guid: 1f9d75c274d5e9b4fb0fabc6b7cbd6fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startBall: 0
+  currentRow: 0
+  startBall: 10
   ballController: {fileID: 867971575}
   brickController: {fileID: 315008250}
-  brickOnTurn: 0
   isSpecialTurn: 0
   sumBallSpecial: 9
 --- !u!1 &1664407465

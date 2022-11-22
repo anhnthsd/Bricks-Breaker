@@ -53,11 +53,6 @@ namespace Game.Script
             transform.position = pos;
         }
 
-        public override void OnEndTurn()
-        {
-            
-        }
-
         private void OnTriggerEnter2D(Collider2D col)
         {
             AddBall(sumBall, transform.position);
