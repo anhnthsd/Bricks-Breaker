@@ -80,9 +80,15 @@ namespace Game.Script
             textBrick.transform.SetParent(BrickController.ins.parentText);
         }
 
+        public override void Active(bool isActive)
+        {
+            textBrick.gameObject.SetActive(isActive);
+            gameObject.SetActive(isActive);
+        }
+
         public override void UpdatePosition(Vector2 pos)
         {
-            transform.position = pos;
+            // transform.position = pos;
             textBrick.transform.SetParent(null);
             textBrick.GetComponent<RectTransform>().anchoredPosition = GameController.ins.cam.WorldToScreenPoint(pos);
             textBrick.transform.SetParent(BrickController.ins.parentText);

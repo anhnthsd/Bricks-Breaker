@@ -40,6 +40,11 @@ namespace Game.Script
             currentMode.EndGame();
         }
 
+        public void EndMap()
+        {
+            currentMode.EndMap();
+        }
+
         public void IncreaseScore()
         {
             currentMode.IncreaseScore();
@@ -48,6 +53,11 @@ namespace Game.Script
         public int GetScore()
         {
             return currentMode.Score;
+        }
+
+        public void Btn()
+        {
+            currentMode.Btn();
         }
     }
 }

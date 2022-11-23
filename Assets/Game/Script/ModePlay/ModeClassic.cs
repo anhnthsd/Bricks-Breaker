@@ -1,87 +1,114 @@
-using System.Collections;
-using System.Collections.Generic;
-using DG.Tweening;
-using Game.Script;
 using UnityEngine;
 
-public class ModeClassic : BaseModePlay
+namespace Game.Script.ModePlay
 {
-    // [SerializeField] private int brickOnTurn = 0;
-    [SerializeField] private bool isSpecialTurn = false;
-    [SerializeField] private int sumBallSpecial = 9;
-    private readonly int[,] _lsMap = new int[,]
+    public class ModeClassic : BaseModePlay
     {
-        { 1, 1, 1, 1, 1, 1, 1 },
-        { 0, 1, 1, 1, 1, 1, 1 },
-        { 0, 1, 1, 1, 1, 1, 1 },
-        { 0, 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 1, 1 },
-        { 0, 1, 1, 1, 1, 1, 1 },
-        { 0, 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 1, 1 },
-        { 0, 1, 1, 1, 1, 1, 1 },
-        { 0, 1, 1, 1, 1, 1, 1 },
-    };
-    
-    private readonly int[,] _lsNumber = new int[,]
-    {
-        { 1, 1, 1, 1, 1, 1, 1 },
-        { 0, 1, 1, 1, 2, 1, 1 },
-        { 0, 2, 1, 3, 1, 1, 2 },
-        { 0, 1, 1, 1, 2, 3, 1 },
-        { 4, 1, 3, 1, 1, 1, 1 },
-        { 0, 1, 1, 1, 1, 1, 1 },
-        { 0, 1, 1, 1, 3, 1, 2 },
-        { 1, 1, 1, 1, 1, 1, 1 },
-        { 3, 1, 3, 1, 1, 1, 2 },
-        { 1, 1, 1, 1, 1, 1, 1 },
-    };
-    void Start()
-    {
-        
-    }
+        // [SerializeField] private int brickOnTurn = 0;
+        [SerializeField] private bool isSpecialTurn = false;
+        [SerializeField] private int sumBallSpecial = 9;
 
-    void Update()
-    {
-        
-    }
+        private int lvl = 1;
 
-    public override void StartGame()
-    {
-        ballController.CreateBall(startBall, new Vector2(0, -3.33f));
-        ballController.CreateDotBall(10, new Vector2(0, -3.33f));
-        brickController.CreateBrick(currentRow);
-    }
-
-    public override void AfterTurn()
-    {
-        if (isSpecialTurn)
+        private int[,] _lsMap = new int[,]
         {
-            BallController.ins.AfterSpecialTurn(sumBallSpecial);
-            isSpecialTurn = false;
+            { 1, 1, 1, 1, 1, 1, 7 },
+            { 0, 1, 7, 1, 1, 1, 1 },
+            { 0, 1, 1, 1, 7, 1, 1 },
+            { 0, 1, 1, 1, 1, 0, 7 },
+            { 1, 1, 1, 7, 1, 1, 7 },
+            { 0, 1, 1, 0, 1, 1, 1 },
+            { 0, 1, 7, 1, 1, 0, 1 },
+            { 1, 7, 1, 1, 1, 1, 7 },
+            { 0, 1, 1, 1, 1, 1, 1 },
+            { 0, 1, 1, 1, 7, 1, 1 },
+        };
+
+        private int[,] _lsNumber = new int[,]
+        {
+            { 8, 1, 6, 1, 1, 10, 1 },
+            { 0, 10, 1, 1, 2, 8, 1 },
+            { 9, 2, 1, 3, 1,9, 2 },
+            { 0, 1, 7, 1, 2, 3, 3 },
+            { 4, 6, 3, 1, 1, 1, 1 },
+            { 0, 5, 1, 1, 1, 5, 1 },
+            { 0, 1, 1, 1, 3, 4, 2 },
+            { 1, 1, 2, 1, 1, 1, 1 },
+            { 3, 1, 3, 1, 1, 1, 2 },
+            { 1, 1, 1, 1, 1, 1, 1 },
+        };
+
+        void Start()
+        {
         }
-        
-        BrickController.ins.AfterTurn();
 
-        BallController.ins.AfterTurn();
-        IncreaseScore();
-    }
+        void Update()
+        {
+        }
 
-    public override void SpecialTurn(int rows = 1)
-    {
-    }
+        public override void StartGame()
+        {
+            currentRow = 1;
+            ballController.CreateBall(startBall, new Vector2(0, -3.33f));
+            ballController.CreateDotBall(10, new Vector2(0, -3.33f));
+            brickController.CreateBrickWithMap(_lsMap, _lsNumber, currentRow);
+        }
 
-    public override void EndGame()
-    {
-        Debug.Log("ENDGAME");
-    }
+        public override void AfterTurn()
+        {
+            if (isSpecialTurn)
+            {
+                ballController.AfterSpecialTurn(sumBallSpecial);
+                isSpecialTurn = false;
+            }
 
-    public override void IncreaseScore()
-    {
-    }
+            ballController.AfterTurn();
 
-    public void CreateMap()
-    {
-        
+            brickController.AfterTurn();
+            IncreaseScore();
+        }
+
+        public override void SpecialTurn(int rows = 1)
+        {
+        }
+
+        public override void EndGame()
+        {
+            Debug.Log("ENDGAME");
+        }
+
+        public override void EndMap()
+        {
+            lvl++;
+            CreateMap();
+            brickController.AddNewMap(_lsMap,_lsNumber);
+        }
+
+        public override void IncreaseScore()
+        {
+        }
+
+        public override void Btn()
+        {
+            ballController.Btn();
+        }
+
+        private void CreateMap()
+        {
+            for (int i = 0; i < _lsMap.GetLength(0); i++)
+            {
+                int typeBrick = 2;
+                for (int j = 0; j < _lsMap.GetLength(1); j++)
+                {
+                    _lsMap[i, j] = typeBrick <= 2 ? Random.Range(0, 11) : Random.Range(0, 2);
+                    if (_lsMap[i, j] > 2 || _lsMap[i, j] == 0)
+                    {
+                        typeBrick++;
+                    }
+
+                    _lsNumber[i, j] = Random.Range(1, 10 * lvl);
+                }
+            }
+        }
     }
 }

@@ -52,6 +52,12 @@ namespace Game.Script
             textBrick.transform.SetParent(BrickController.ins.parentText);
         }
 
+        public override void Active(bool isActive)
+        {
+            textBrick.gameObject.SetActive(isActive);
+            gameObject.SetActive(isActive);
+        }
+
         public override void UpdatePosition(Vector2 pos)
         {
             transform.position = pos;

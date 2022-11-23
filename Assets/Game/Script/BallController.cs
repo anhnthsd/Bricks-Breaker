@@ -14,7 +14,9 @@ namespace Game.Script
         public BallScript ball;
         public GameObject direcBall;
         public GameObject addBall;
-        public List<GameObject> listDirecBall;
+        public List<GameObject> listDotBall;
+        public Transform parentBall;
+        public Transform parentDotBall;
         public List<BallScript> lsBalls;
 
         public LayerMask wallMask;
@@ -59,10 +61,10 @@ namespace Game.Script
                     direction = anchor - ballPos;
                 }
 
-                for (int i = 0; i < listDirecBall.Count; i++)
+                for (int i = 0; i < listDotBall.Count; i++)
                 {
-                    if (listDirecBall[i].activeInHierarchy)
-                        listDirecBall[i].SetActive(false);
+                    if (listDotBall[i].activeInHierarchy)
+                        listDotBall[i].SetActive(false);
                 }
 
                 _corShootBall = StartCoroutine(ShootBall(direction));
@@ -95,49 +97,49 @@ namespace Game.Script
                 {
                     if (ray.collider.CompareTag("WallHor"))
                     {
-                        for (int i = 0; i < listDirecBall.Count; i++)
+                        for (int i = 0; i < listDotBall.Count; i++)
                         {
                             SetDirecBall(i, direction, posStart);
 
                             Vector2 direcReflect = Vector2.Reflect(direction, Vector2.down);
-                            if (listDirecBall[i].transform.position.y > ray.point.y)
+                            if (listDotBall[i].transform.position.y > ray.point.y)
                             {
                                 SetDirecReflectBall(ref check, i, direcReflect, ray, ref balls);
                             }
 
-                            bool disActive = listDirecBall[i].transform.position.y < posStart.y;
+                            bool disActive = listDotBall[i].transform.position.y < posStart.y;
                             DisActiveDirecBall(disActive, i);
                         }
                     }
                     else
                     {
-                        for (int i = 0; i < listDirecBall.Count; i++)
+                        for (int i = 0; i < listDotBall.Count; i++)
                         {
                             SetDirecBall(i, direction, posStart);
 
                             if (ray.point.x < posStart.x)
                             {
                                 Vector2 direcReflect = Vector2.Reflect(direction, Vector2.right);
-                                if (listDirecBall[i].transform.position.x < ray.point.x)
+                                if (listDotBall[i].transform.position.x < ray.point.x)
                                 {
                                     SetDirecReflectBall(ref check, i, direcReflect, ray, ref balls);
                                 }
 
-                                bool disActive = listDirecBall[i].transform.position.x > (0 - ray.point.x - 0.5f) ||
-                                                 listDirecBall[i].transform.position.y > 3.5f;
+                                bool disActive = listDotBall[i].transform.position.x > (0 - ray.point.x - 0.5f) ||
+                                                 listDotBall[i].transform.position.y > 3.5f;
 
                                 DisActiveDirecBall(disActive, i);
                             }
                             else
                             {
                                 Vector2 direcReflect = Vector2.Reflect(direction, Vector2.left);
-                                if (listDirecBall[i].transform.position.x > ray.point.x)
+                                if (listDotBall[i].transform.position.x > ray.point.x)
                                 {
                                     SetDirecReflectBall(ref check, i, direcReflect, ray, ref balls);
                                 }
 
-                                bool disActive = listDirecBall[i].transform.position.x < (0 - ray.point.x + 0.5f) ||
-                                                 listDirecBall[i].transform.position.y > 3.5f;
+                                bool disActive = listDotBall[i].transform.position.x < (0 - ray.point.x + 0.5f) ||
+                                                 listDotBall[i].transform.position.y > 3.5f;
                                 DisActiveDirecBall(disActive, i);
                             }
                         }
@@ -145,7 +147,7 @@ namespace Game.Script
                 }
                 else
                 {
-                    for (int i = 0; i < listDirecBall.Count; i++)
+                    for (int i = 0; i < listDotBall.Count; i++)
                     {
                         SetDirecBall(i, direction, posStart);
                     }
@@ -155,25 +157,25 @@ namespace Game.Script
 
         void SetDirecBall(int i, Vector2 direction, Vector3 posStart)
         {
-            if (!listDirecBall[i].activeInHierarchy)
+            if (!listDotBall[i].activeInHierarchy)
             {
-                listDirecBall[i].SetActive(true);
+                listDotBall[i].SetActive(true);
             }
 
-            listDirecBall[i].transform.position = (Vector3)(direction.normalized * (i * 0.5f)) + posStart;
+            listDotBall[i].transform.position = (Vector3)(direction.normalized * (i * 0.5f)) + posStart;
         }
 
         void DisActiveDirecBall(bool disActive, int i)
         {
             if (disActive)
             {
-                listDirecBall[i].SetActive(false);
+                listDotBall[i].SetActive(false);
             }
             else
             {
-                if (i == listDirecBall.Count - 1 && listDirecBall.Count < 30)
+                if (i == listDotBall.Count - 1 && listDotBall.Count < 30)
                 {
-                    listDirecBall.Add(Instantiate(direcBall));
+                    listDotBall.Add(Instantiate(direcBall, parentDotBall, true));
                 }
             }
         }
@@ -186,7 +188,7 @@ namespace Game.Script
                 balls = i - 1;
             }
 
-            listDirecBall[i].transform.position = direcReflect.normalized * ((i - balls) * 0.5f) + ray.point;
+            listDotBall[i].transform.position = direcReflect.normalized * ((i - balls) * 0.5f) + ray.point;
         }
 
         IEnumerator ShootBall(Vector2 direction)
@@ -202,7 +204,7 @@ namespace Game.Script
         {
             for (int i = 0; i < ballCount; i++)
             {
-                var newBall = Instantiate(ball);
+                var newBall = Instantiate(ball,parentBall,true);
                 newBall.transform.position = position;
                 lsBalls.Add(newBall);
             }
@@ -212,9 +214,9 @@ namespace Game.Script
         {
             for (int i = 0; i < ballCount; i++)
             {
-                var direcB = Instantiate(direcBall);
+                var direcB = Instantiate(direcBall, parentDotBall, true);
                 direcBall.SetActive(false);
-                listDirecBall.Add(direcB);
+                listDotBall.Add(direcB);
             }
         }
 

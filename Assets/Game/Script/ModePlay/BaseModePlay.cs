@@ -27,7 +27,9 @@ namespace Game.Script
         public abstract void SpecialTurn(int rows = 1);
 
         public abstract void EndGame();
+        public abstract void EndMap();
         public abstract void IncreaseScore();
+        public abstract void Btn();
 
     }
 }

@@ -9,7 +9,7 @@ namespace Game.Script
     {
         public int sumBall = 1;
         public List<Sprite> lsBrickSprites;
-        
+
         public override void OnSpawn(int hp)
         {
             colBrick.isTrigger = true;
@@ -48,6 +48,12 @@ namespace Game.Script
         {
             transform.position = pos;
         }
+
+        public override void Active(bool isActive)
+        {
+            gameObject.SetActive(isActive);
+        }
+
         public override void UpdatePosition(Vector2 pos)
         {
             transform.position = pos;
