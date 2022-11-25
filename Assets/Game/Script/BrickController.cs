@@ -32,6 +32,8 @@ namespace Game.Script
         private int[,] _lsMap;
         private int[,] _lsNumber;
 
+        private const int MAX_ROW = 8;
+        private const float BRICK = 0.8f;
 
         private void Awake()
         {
@@ -48,15 +50,15 @@ namespace Game.Script
             _lsMap = lsMap;
             _lsNumber = lsNumber;
             _currentRow = rows;
-            lsBrick = new BaseBrick[lsMap.GetLongLength(1), lsMap.GetLongLength(0)];
 
+            lsBrick = new BaseBrick[lsMap.GetLongLength(0), lsMap.GetLongLength(1)];
             for (int j = lsBrick.GetLength(1) - 1; j >= 0; j--)
             {
                 for (int i = 0; i < lsBrick.GetLength(0); i++)
                 {
-                    var brickType = (TypeOfBrick)lsMap[j, i];
-                    var number = lsNumber[j, i];
-                    bool isActive = j > lsBrick.GetLength(1) - 1 - _currentRow;
+                    var brickType = (TypeOfBrick)lsMap[i, j];
+                    var number = lsNumber[i, j];
+                    bool isActive = i > lsBrick.GetLength(0) - 1 - _currentRow;
                     CreateNewBrick(i, j, brickType, number, isActive);
                 }
             }
@@ -122,7 +124,9 @@ namespace Game.Script
             if (brickNew)
             {
                 brickNew.transform.SetParent(parentBrick);
-                brickNew.SetPosition(new Vector2(-2.45f + 0.8f * i, (0.8f * lsBrick.GetLength(1)) + 1.8f - 0.8f * (_currentRow - 1) - 0.8f * j));
+                brickNew.SetPosition(new Vector2(
+                    -2.45f + 0.8f * j,
+                    (0.8f * lsBrick.GetLength(0)) + 1.8f - 0.8f * (_currentRow - 1) - 0.8f * i));
                 brickNew.Active(isActive);
                 brickNew.OnSpawn(number);
                 brickNew.typeOfBrick = brickType;
@@ -142,64 +146,45 @@ namespace Game.Script
             lsBrick[i, j] = null;
         }
 
+
         public void AfterTurn()
         {
-            parentBrick.position -= new Vector3(0, 0.8f, 0);
-            for (int j = lsBrick.GetLength(1) - 1; j >= 0; j--)
+            var newPosition = parentBrick.position - new Vector3(0, 0.8f, 0);
+            parentBrick.transform.DOMove(newPosition, 0.2f);
+            for (int i = 0; i < lsBrick.GetLength(0); i++)
             {
-                for (int i = 0; i < lsBrick.GetLength(0); i++)
+                for (int j = 0; j < lsBrick.GetLength(1); j++)
                 {
                     if (lsBrick[i, j])
                     {
-                        var newPos = lsBrick[i, j].transform.position;
+                        var newPos = new Vector3(lsBrick[i, j].transform.position.x,
+                            lsBrick[i, j].transform.position.y - 0.8f, 0);
                         lsBrick[i, j].UpdatePosition(newPos);
+
+                        if ((lsBrick.GetLength(0) - 1 - _currentRow + MAX_ROW - 1) == i)
+                        {
+                            Debug.Log((lsBrick.GetLength(0) - 1 - _currentRow + MAX_ROW - 1) + " _ " + i);
+                            if (lsBrick[i, j].CanDieOnBottom())
+                            {
+                                GameController.ins.EndGame();
+                            }
+                            else
+                            {
+                                if (lsBrick[i, j].typeOfBrick == TypeOfBrick.AddBall)
+                                {
+                                    var itemS = lsBrick[i, j].GetComponent<ItemAddBall>();
+                                    ballController.CreateNewBall(newPos, itemS.sumBall);
+                                    itemS.DestroyBrick();
+                                }
+                                else
+                                {
+                                    lsBrick[i, j].GetComponent<BaseBrick>().DestroyBrick();
+                                }
+                            }
+                        }
                     }
                 }
             }
-
-            // for (int j = lsBrick.GetLength(1) - 1; j >= 0; j--)
-            // {
-            //     for (int i = 0; i < lsBrick.GetLength(0); i++)
-            //     {
-            //         if (j == 0)
-            //         {
-            //             lsBrick[i, j] = null;
-            //         }
-            //         else
-            //         {
-            //             lsBrick[i, j] = lsBrick[i, j - 1];
-            //         }
-            //
-            //         if (lsBrick[i, j])
-            //         {
-            //             var newPos = new Vector3(-2.45f + 0.8f * i, 2.5f - 0.8f * j, 0);
-            //             lsBrick[i, j].UpdatePosition(newPos);
-            //             lsBrick[i, j].i = i;
-            //             lsBrick[i, j].j = j;
-            //             if (j == 7)
-            //             {
-            //                 var item = lsBrick[i, j];
-            //                 if (item.CanDieOnBottom())
-            //                 {
-            //                     GameController.ins.EndGame();
-            //                 }
-            //                 else
-            //                 {
-            //                     if (lsBrick[i, j].typeOfBrick == TypeOfBrick.AddBall)
-            //                     {
-            //                         var itemS = lsBrick[i, j].GetComponent<ItemAddBall>();
-            //                         var newBall = Instantiate(ballController.addBall);
-            //                         newBall.transform.position = newPos;
-            //                         newBall.transform.DOMove(ballController.ballFirstFall.transform.position, 0.3f)
-            //                             .OnComplete(() => Destroy(newBall));
-            //                         ballController.sumAddBall += itemS.sumBall;
-            //                         itemS.DestroyBrick();
-            //                     }
-            //                 }
-            //             }
-            //         }
-            //     }
-            // }
 
             AddMap();
             OnEndTurn?.Invoke();
@@ -207,14 +192,14 @@ namespace Game.Script
 
         private void AddMap()
         {
-            if (_currentRow > _lsMap.GetLongLength(0) - 1) GameController.ins.EndMap();
-            if (_currentRow > _lsMap.GetLongLength(0) - 1) return;
+            if (_currentRow > _lsMap.GetLength(0) - 1) GameController.ins.EndMap();
+            if (_currentRow > _lsMap.GetLength(0) - 1) return;
 
-            for (int i = 0; i < lsBrick.GetLength(0); i++)
+            for (int j = 0; j < lsBrick.GetLength(1); j++)
             {
-                if (lsBrick[i, lsBrick.GetLength(1) - 1 - _currentRow])
+                if (lsBrick[lsBrick.GetLength(0) - 1 - _currentRow, j])
                 {
-                    lsBrick[i, lsBrick.GetLength(1) - 1 - _currentRow].Active(true);
+                    lsBrick[lsBrick.GetLength(0) - 1 - _currentRow, j].Active(true);
                 }
             }
 
@@ -224,9 +209,9 @@ namespace Game.Script
         public bool IsSpecialTurn()
         {
             if (_lsMap.GetLength(0) - _currentRow <= 3) return false;
-            for (int j = lsBrick.GetLength(1) - 1; j >= 3; j--)
+            for (int i = lsBrick.GetLength(0) - 1; i > _currentRow + 3; i--)
             {
-                for (int i = 0; i < lsBrick.GetLength(0); i++)
+                for (int j = 0; j < lsBrick.GetLength(1); j++)
                 {
                     var item = lsBrick[i, j];
                     if (!item) continue;
@@ -258,24 +243,24 @@ namespace Game.Script
 
         private void OnDamageHor(int hor)
         {
-            for (int i = 0; i < lsBrick.GetLength(0); i++)
+            for (int j = 0; j < lsBrick.GetLength(1); j++)
             {
-                if (!lsBrick[i, hor]) continue;
-                if (lsBrick[i, hor].CanDieOnBottom())
+                if (!lsBrick[hor, j]) continue;
+                if (lsBrick[hor, j].CanDieOnBottom() && lsBrick[hor, j].gameObject.activeInHierarchy)
                 {
-                    lsBrick[i, hor].TakeDamage();
+                    lsBrick[hor, j].TakeDamage();
                 }
             }
         }
 
         private void OnDamageVer(int ver)
         {
-            for (int i = 0; i < lsBrick.GetLength(1); i++)
+            for (int i = 0; i < lsBrick.GetLength(0); i++)
             {
-                if (!lsBrick[ver, i]) continue;
-                if (!lsBrick[ver, i].CanDieOnBottom())
+                if (!lsBrick[i, ver]) continue;
+                if (lsBrick[i, ver].CanDieOnBottom() && lsBrick[i, ver].gameObject.activeInHierarchy)
                 {
-                    lsBrick[ver, i].TakeDamage();
+                    lsBrick[i, ver].TakeDamage();
                 }
             }
         }
@@ -343,24 +328,24 @@ namespace Game.Script
 
         private void OnBurstHor(int hor)
         {
-            for (int i = 0; i < lsBrick.GetLength(0); i++)
+            for (int j = 0; j < lsBrick.GetLength(1); j++)
             {
-                if (!lsBrick[i, hor]) continue;
-                if (lsBrick[i, hor].CanDieOnBottom())
+                if (!lsBrick[hor, j]) continue;
+                if (lsBrick[hor, j].CanDieOnBottom())
                 {
-                    lsBrick[i, hor].DestroyBrick();
+                    lsBrick[hor, j].DestroyBrick();
                 }
             }
         }
 
         private void OnBurstVer(int ver)
         {
-            for (int i = 0; i < lsBrick.GetLength(1); i++)
+            for (int i = 0; i < lsBrick.GetLength(0); i++)
             {
-                if (!lsBrick[ver, i]) continue;
-                if (lsBrick[ver, i].CanDieOnBottom())
+                if (!lsBrick[i, ver]) continue;
+                if (lsBrick[i, ver].CanDieOnBottom())
                 {
-                    lsBrick[ver, i].DestroyBrick();
+                    lsBrick[i, ver].DestroyBrick();
                 }
             }
         }

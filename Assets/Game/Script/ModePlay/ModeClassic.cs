@@ -38,19 +38,10 @@ namespace Game.Script.ModePlay
             { 1, 1, 1, 1, 1, 1, 1 },
         };
 
-        void Start()
-        {
-        }
-
-        void Update()
-        {
-        }
-
-        public override void StartGame()
+        public override void StartGame(int level)
         {
             currentRow = 1;
-            ballController.CreateBall(startBall, new Vector2(0, -3.33f));
-            ballController.CreateDotBall(10, new Vector2(0, -3.33f));
+            ballController.Play(startBall);
             brickController.CreateBrickWithMap(_lsMap, _lsNumber, currentRow);
         }
 

@@ -63,7 +63,7 @@ namespace Game.Script
 
         public override void UpdatePosition(Vector2 pos)
         {
-            transform.position = pos;
+            // transform.position = pos;
         }
 
 

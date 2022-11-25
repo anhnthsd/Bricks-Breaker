@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -19,6 +20,10 @@ namespace Game.Script
         public Transform parentDotBall;
         public List<BallScript> lsBalls;
 
+        public Transform parentTxtBall;
+        public TextMeshProUGUI textPrefab;
+        public TextMeshProUGUI textSumBall;
+
         public LayerMask wallMask;
         public BallScript ballFirstFall;
         private int _ballFall = 0;
@@ -32,9 +37,14 @@ namespace Game.Script
             ins = this;
         }
 
-        public void Play()
+        private void Start()
         {
-            CreateBall(10, new Vector2(0, -3.33f));
+        }
+
+        public void Play(int startBall)
+        {
+            textSumBall = Instantiate(textPrefab);
+            CreateBall(startBall, new Vector2(0, -3.33f));
             CreateDotBall(10, new Vector2(0, -3.33f));
         }
 
@@ -67,6 +77,7 @@ namespace Game.Script
                         listDotBall[i].SetActive(false);
                 }
 
+                textSumBall.gameObject.SetActive(false);
                 _corShootBall = StartCoroutine(ShootBall(direction));
             }
 
@@ -208,6 +219,12 @@ namespace Game.Script
                 newBall.transform.position = position;
                 lsBalls.Add(newBall);
             }
+
+            var pos = lsBalls[0].transform.position + new Vector3(0.4f,0,0);
+            textSumBall.GetComponent<RectTransform>().anchoredPosition = GameController.ins.cam.WorldToScreenPoint(pos);
+            textSumBall.transform.SetParent(parentTxtBall);
+            textSumBall.gameObject.SetActive(true);
+            textSumBall.text = lsBalls.Count.ToString();
         }
 
         public void CreateDotBall(int ballCount, Vector2 position)
@@ -252,8 +269,31 @@ namespace Game.Script
             isFly = false;
             ballFirstFall = null;
             _ballFall = 0;
+            textSumBall.transform.SetParent(null);
+            var pos = lsBalls[0].transform.position + new Vector3(0.4f,0,0);
+            textSumBall.GetComponent<RectTransform>().anchoredPosition = GameController.ins.cam.WorldToScreenPoint(pos);
+            textSumBall.transform.SetParent(BrickController.ins.parentText);
         }
 
+        public void CreateNewBall(Vector3 newPos, int sumBall)
+        {
+            var newBall = Instantiate(addBall);
+            newBall.transform.position = newPos;
+
+            if (ballFirstFall)
+            {
+                newBall.transform.DOMove(ballFirstFall.transform.position, 0.3f)
+                    .OnComplete(() => Destroy(newBall));
+            }
+            else
+            {
+                newBall.transform.DOMove(lsBalls[0].transform.position, 0.3f)
+                    .OnComplete(() => Destroy(newBall));
+            }
+
+            sumAddBall += sumBall;
+        }
+        
         public void SpecialTurn(int countAddBall)
         {
             var fx = Instantiate(fxSpecialBall);

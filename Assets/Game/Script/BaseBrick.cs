@@ -13,7 +13,9 @@ namespace Game.Script
         public int j;
 
         public abstract void OnSpawn(int hp);
+
         public abstract void SetSprite(TypeOfBrick type);
+
         //public abstract void TakeItemBurst();
         public abstract void TakeDamage();
         public abstract void SetPosition(Vector2 pos);
@@ -22,7 +24,6 @@ namespace Game.Script
 
         public virtual void OnEndTurn()
         {
-            
         }
 
         public bool CanDieOnBottom()
@@ -50,8 +51,11 @@ namespace Game.Script
 
         public virtual void DestroyBrick()
         {
-            gameObject.SetActive(false);
-            BrickController.ins.DelBrick(i, j);
+            if (gameObject.activeInHierarchy)
+            {
+                gameObject.SetActive(false);
+                BrickController.ins.DelBrick(i, j);
+            }
         }
     }
 }

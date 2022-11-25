@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -90,7 +91,8 @@ namespace Game.Script
         {
             // transform.position = pos;
             textBrick.transform.SetParent(null);
-            textBrick.GetComponent<RectTransform>().anchoredPosition = GameController.ins.cam.WorldToScreenPoint(pos);
+            // textBrick.GetComponent<RectTransform>().anchoredPosition = GameController.ins.cam.WorldToScreenPoint(pos);
+            textBrick.GetComponent<RectTransform>().DOMove(GameController.ins.cam.WorldToScreenPoint(pos), 0.2f);
             textBrick.transform.SetParent(BrickController.ins.parentText);
         }
 

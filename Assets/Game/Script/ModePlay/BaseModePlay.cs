@@ -22,7 +22,7 @@ namespace Game.Script
 
         public BallController ballController;
         public BrickController brickController;
-        public abstract void StartGame();
+        public abstract void StartGame(int level);
         public abstract void AfterTurn();
         public abstract void SpecialTurn(int rows = 1);
 

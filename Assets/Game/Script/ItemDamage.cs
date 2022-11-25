@@ -42,7 +42,7 @@ namespace Game.Script
 
         public override void SetSprite(TypeOfBrick type)
         {
-            this.typeOfBrick = type;
+            typeOfBrick = type;
             switch (type)
             {
                 case TypeOfBrick.DamageHorizontal:
@@ -75,7 +75,7 @@ namespace Game.Script
 
         public override void UpdatePosition(Vector2 pos)
         {
-            transform.position = pos;
+            // transform.position = pos;
         }
 
         public override void TakeDamage()
@@ -85,7 +85,7 @@ namespace Game.Script
         private void OnTriggerEnter2D(Collider2D col)
         {
             isOver = true;
-            BrickController.ins.OnDamage(transform.position, typeOfBrick, j, i);
+            BrickController.ins.OnDamage(transform.position, typeOfBrick, i, j);
         }
     }
 }

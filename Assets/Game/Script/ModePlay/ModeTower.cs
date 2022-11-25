@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Game.Script.UI;
 using UnityEngine;
 
 namespace Game.Script.ModePlay
@@ -29,9 +30,9 @@ namespace Game.Script.ModePlay
         private readonly int[,] _lsNumber = new int[,]
         {
             { 1, 1, 1, 1, 1, 1, 1 },
-            { 0, 1, 1, 1, 2, 1, 1 },
-            { 0, 2, 1, 3, 1, 1, 2 },
-            { 0, 1, 1, 1, 2, 3, 1 },
+            { 1, 1, 1, 1, 2, 1, 1 },
+            { 1, 2, 1, 3, 1, 1, 2 },
+            { 1, 1, 1, 1, 2, 3, 1 },
             { 4, 1, 3, 1, 1, 1, 1 },
             { 0, 1, 1, 1, 1, 1, 1 },
             { 0, 1, 1, 1, 3, 1, 2 },
@@ -44,12 +45,11 @@ namespace Game.Script.ModePlay
             { 100, 2, 1, 1, 1, 1, 3 },
         };
     
-        public override void StartGame()
+        public override void StartGame(int level)
         {
             currentRow = 4;
-            ballController.CreateBall(startBall, new Vector2(0, -3.33f));
-            ballController.CreateDotBall(10, new Vector2(0, -3.33f));
-            brickController.CreateBrickWithMap(_lsMap, _lsNumber,currentRow);
+            ballController.Play(startBall);
+            brickController.CreateBrickWithMap(_lsMap, _lsNumber, currentRow);
         }
 
         public override void AfterTurn()
@@ -79,7 +79,7 @@ namespace Game.Script.ModePlay
         {
             for (int r = 0; r < rows; r++)
             {
-                DOVirtual.DelayedCall(0.2f, () => { brickController.AfterTurn(); });
+                DOVirtual.DelayedCall(0.3f, () => { brickController.AfterTurn(); });
             }
 
             ballController.SpecialTurn(sumBallSpecial);
@@ -98,6 +98,7 @@ namespace Game.Script.ModePlay
         {
             brickOnTurn++;
             Score += 10 * brickOnTurn;
+            
         }
 
         public override void Btn()

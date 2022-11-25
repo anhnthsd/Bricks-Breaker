@@ -1,5 +1,6 @@
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game.Script
 {
@@ -9,6 +10,11 @@ namespace Game.Script
         public Camera cam;
         public BaseModePlay currentMode;
 
+        [SerializeField] private BaseModePlay[] modePlays;
+        public bool isEndGame = false;
+        public Text txtScore;
+        public GameObject goPlay;
+
         private void Awake()
         {
             ins = this;
@@ -17,17 +23,22 @@ namespace Game.Script
         private void Start()
         {
             cam = Camera.main;
-            PlayGame();
         }
 
-        public void PlayGame()
+        public void PlayGame(GameMode gameMode, int level)
         {
-            currentMode.StartGame();
+            goPlay.SetActive(true);
+            currentMode = modePlays[(int)gameMode];
+            currentMode.gameObject.SetActive(true);
+            currentMode.StartGame(level);
         }
 
         public void AfterTurn()
         {
-            currentMode.AfterTurn();
+            if (!isEndGame)
+            {
+                currentMode.AfterTurn();
+            }
         }
 
         public void SpecialTurn(int rows = 1)
@@ -38,6 +49,7 @@ namespace Game.Script
         public void EndGame()
         {
             currentMode.EndGame();
+            isEndGame = true;
         }
 
         public void EndMap()
@@ -60,4 +72,12 @@ namespace Game.Script
             currentMode.Btn();
         }
     }
+}
+
+public enum GamePlayState
+{
+    Start,
+    Playing,
+    Victory,
+    Lose
 }
