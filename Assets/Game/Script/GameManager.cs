@@ -1,19 +1,15 @@
+using System;
+using Game.Script.Mission;
 using UnityEngine;
 
 namespace Game.Script
 {
     public class GameManager : MonoBehaviour
     {
-        // Start is called before the first frame update
-        void Start()
+        private void Awake()
         {
-        
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
+            MainMissionModel.Ins.Init();
+            DailyMissionModel.Ins.Init();
         }
     }
 }

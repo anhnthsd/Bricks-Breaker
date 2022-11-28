@@ -1,4 +1,7 @@
 using DG.Tweening;
+using Game.Script.Data;
+using Game.Script.Mission;
+using Game.Script.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,9 +15,8 @@ namespace Game.Script
 
         [SerializeField] private BaseModePlay[] modePlays;
         public bool isEndGame = false;
-        public Text txtScore;
         public GameObject goPlay;
-
+        
         private void Awake()
         {
             ins = this;
@@ -41,15 +43,16 @@ namespace Game.Script
             }
         }
 
-        public void SpecialTurn(int rows = 1)
+        public void SpecialTurn()
         {
-            currentMode.SpecialTurn(rows);
+            DailyMissionModel.Ins.ReportMission(TypeMissionDaily.SpecialTurn);
         }
 
         public void EndGame()
         {
             currentMode.EndGame();
             isEndGame = true;
+            PopupManager.Show<UIResult>();
         }
 
         public void EndMap()

@@ -5,11 +5,13 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace Game.Script
 {
     public class BallController : MonoBehaviour
     {
+        [SerializeField] private GameObject btnBallReturn;
         public static BallController ins;
         private bool isFly = false; 
         public BallScript ball;
@@ -31,14 +33,10 @@ namespace Game.Script
         private Coroutine _corShootBall;
 
         public GameObject fxSpecialBall;
-
+        
         private void Awake()
         {
             ins = this;
-        }
-
-        private void Start()
-        {
         }
 
         public void Play(int startBall)
@@ -79,6 +77,7 @@ namespace Game.Script
 
                 textSumBall.gameObject.SetActive(false);
                 _corShootBall = StartCoroutine(ShootBall(direction));
+                btnBallReturn.SetActive(true);
             }
 
             if (Input.GetMouseButton(0))
@@ -94,12 +93,6 @@ namespace Game.Script
                     var anchor = point.x < posStart.x ? new Vector3(-2.5f, -3f, 0) : new Vector3(2.5f, -3f, 0);
                     direction = anchor - posStart;
                 }
-                // var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-                //
-                // if (angle < 10 || angle > 170)
-                // {
-                //     return;
-                // }
 
                 var ray = Physics2D.Raycast(posStart, direction, 20, wallMask);
                 bool check = true;
@@ -264,6 +257,7 @@ namespace Game.Script
 
         public void AfterTurn()
         {
+            btnBallReturn.SetActive(false);
             CreateBall(sumAddBall, lsBalls[0].transform.position);
             sumAddBall = 0;
             isFly = false;
@@ -334,7 +328,7 @@ namespace Game.Script
             else newBall.transform.DOMove(lsBalls[0].transform.position, 0.2f).OnComplete((() => Destroy(newBall)));
         }
 
-        public void Btn()
+        public void BallReturn()
         {
             if (_corShootBall != null)
             {

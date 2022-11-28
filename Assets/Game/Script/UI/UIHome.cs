@@ -14,7 +14,7 @@ namespace Game.Script.UI
 
         public override void Initialize()
         {
-            btnQuest.onClick.AddListener((() => UIManager.Show<UIQuest>()));
+            btnQuest.onClick.AddListener((() => PopupManager.Show<UIQuest>()));
             btnModeClassic.onClick.AddListener(() => PlayGame(GameMode.Classic));
             btnModeTower.onClick.AddListener(() => PlayGame(GameMode.Tower));
             SetScroll();

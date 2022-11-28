@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using Game.Script.UI;
 using UnityEngine;
@@ -9,6 +10,9 @@ namespace Game.Script.ModePlay
         [SerializeField] private int brickOnTurn = 0;
         [SerializeField] private bool isSpecialTurn = false;
         [SerializeField] private int sumBallSpecial = 9;
+
+        public Action<int> eventUpdateScoreTower;
+
         private readonly int[,] _lsMap = new int[,]
         {
             { 1, 1, 1, 1, 1, 1, 1 },
@@ -67,9 +71,11 @@ namespace Game.Script.ModePlay
             if (brickController.IsClearMap())
             {
                 Debug.Log("Victory");
+                PopupManager.Show<UIResult>();
             }
             if (brickController.IsSpecialTurn())
             {
+                GameController.ins.SpecialTurn();
                 isSpecialTurn = true;
                 SpecialTurn(2);
             }
@@ -98,12 +104,12 @@ namespace Game.Script.ModePlay
         {
             brickOnTurn++;
             Score += 10 * brickOnTurn;
-            
+            eventUpdateScoreTower?.Invoke(Score);
         }
 
         public override void Btn()
         {
-            ballController.Btn();
+            ballController.BallReturn();
         }
     }
 }

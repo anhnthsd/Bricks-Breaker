@@ -151,6 +151,7 @@ namespace Game.Script
         {
             var newPosition = parentBrick.position - new Vector3(0, 0.8f, 0);
             parentBrick.transform.DOMove(newPosition, 0.2f);
+            
             for (int i = 0; i < lsBrick.GetLength(0); i++)
             {
                 for (int j = 0; j < lsBrick.GetLength(1); j++)

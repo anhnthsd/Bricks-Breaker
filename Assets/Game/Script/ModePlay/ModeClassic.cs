@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Script.ModePlay
 {
@@ -8,6 +10,7 @@ namespace Game.Script.ModePlay
         [SerializeField] private bool isSpecialTurn = false;
         [SerializeField] private int sumBallSpecial = 9;
 
+        public Action<int> eventUpdateScoreClassic;
         private int lvl = 1;
 
         private int[,] _lsMap = new int[,]
@@ -77,11 +80,13 @@ namespace Game.Script.ModePlay
 
         public override void IncreaseScore()
         {
+            Score++;
+            eventUpdateScoreClassic?.Invoke(Score);
         }
 
         public override void Btn()
         {
-            ballController.Btn();
+            ballController.BallReturn();
         }
 
         private void CreateMap()
