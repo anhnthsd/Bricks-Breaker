@@ -1,17 +1,15 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Script.UI
 {
-    public class UIManager : MonoBehaviour
+    public class PopupManager : MonoBehaviour
     {
-        public static UIManager ins;
+        public static PopupManager ins;
 
-        [SerializeField] private View startView;
-        [SerializeField] private View[] _views;
-
-        private View _currentView;
+        [SerializeField] private View[] popViews;
+        private View _currentPopup;
         private readonly Stack<View> _history = new Stack<View>();
 
         private void Awake()
@@ -21,23 +19,19 @@ namespace Game.Script.UI
 
         private void Start()
         {
-            for (int i = 0; i < _views.Length; i++)
+            for (int i = 0; i < popViews.Length; i++)
             {
-                _views[i].Initialize();
-                _views[i].Hide();
+                popViews[i].Initialize();
+                popViews[i].Hide();
             }
-
-            if (startView != null)
-            {
-                Show(startView, true);
-            }
+            
         }
 
         public static T GetView<T>() where T : View
         {
-            for (int i = 0; i < ins._views.Length; i++)
+            for (int i = 0; i < ins.popViews.Length; i++)
             {
-                if (ins._views[i] is T tView)
+                if (ins.popViews[i] is T tView)
                 {
                     return tView;
                 }
@@ -48,41 +42,41 @@ namespace Game.Script.UI
 
         public static void Show<T>(bool remember = true) where T : View
         {
-            for (int i = 0; i < ins._views.Length; i++)
+            for (int i = 0; i < ins.popViews.Length; i++)
             {
-                if (ins._views[i] is T)
+                if (ins.popViews[i] is T)
                 {
-                    if (ins._currentView != null)
+                    if (ins._currentPopup != null)
                     {
                         if (remember)
                         {
-                            ins._history.Push(ins._currentView);
+                            ins._history.Push(ins._currentPopup);
                         }
 
-                        ins._currentView.Hide();
+                        ins._currentPopup.Hide();
                     }
 
-                    ins._views[i].Show();
-                    ins._currentView = ins._views[i];
+                    ins.popViews[i].Show();
+                    ins._currentPopup = ins.popViews[i];
                 }
             }
         }
 
         public static void Show(View view, bool remenber = true)
         {
-            if (ins._currentView != null)
+            if (ins._currentPopup != null)
             {
                 if (remenber)
                 {
-                    ins._history.Push(ins._currentView);
+                    ins._history.Push(ins._currentPopup);
                 }
 
-                ins._currentView.Hide();
+                ins._currentPopup.Hide();
             }
 
             view.Show();
 
-            ins._currentView = view;
+            ins._currentPopup = view;
         }
 
         public static void ShowLast()
