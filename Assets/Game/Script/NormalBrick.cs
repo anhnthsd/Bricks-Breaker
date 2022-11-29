@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DG.Tweening;
+using Game.Script.Data;
 using TMPro;
 using UnityEngine;
 
@@ -11,7 +12,6 @@ namespace Game.Script
         public int hpBrick;
         public TextMeshProUGUI textBrick;
         public GameObject fxBrick;
-        public List<Sprite> lsBrickSprites;
 
         public override void OnSpawn(int hp)
         {
@@ -22,6 +22,8 @@ namespace Game.Script
 
         public override void SetSprite(TypeOfBrick type)
         {
+            var lsBrickSprites = Resources.Load<DataBrick>("DataBrick").brickInfo.Find(s => s.type == type)
+                .lsSprite;
             if (hpBrick < 2)
             {
                 srBrick.sprite = lsBrickSprites[0];
@@ -87,12 +89,15 @@ namespace Game.Script
             gameObject.SetActive(isActive);
         }
 
-        public override void UpdatePosition(Vector2 pos)
+        private void Update()
         {
-            // transform.position = pos;
+            UpdateTextPosition(transform.position);
+        }
+
+        public override void UpdateTextPosition(Vector2 pos)
+        {
             textBrick.transform.SetParent(null);
-            // textBrick.GetComponent<RectTransform>().anchoredPosition = GameController.ins.cam.WorldToScreenPoint(pos);
-            textBrick.GetComponent<RectTransform>().DOMove(GameController.ins.cam.WorldToScreenPoint(pos), 0.2f);
+            textBrick.GetComponent<RectTransform>().anchoredPosition = GameController.ins.cam.WorldToScreenPoint(pos);
             textBrick.transform.SetParent(BrickController.ins.parentText);
         }
 

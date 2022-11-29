@@ -26,6 +26,11 @@ namespace Game.Script.UI
             txtScore.text = "Score: " + currentMode.Score;
             Debug.Log(GameController.ins.currentMode);
         }
-        
+
+        private void SetTopMode(GameMode mode)
+        {
+            UIModeClassic.SetActive(mode == GameMode.Classic);
+            UIModeTower.SetActive(mode == GameMode.Tower);
+        }
     }
 }

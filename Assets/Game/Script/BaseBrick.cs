@@ -20,7 +20,7 @@ namespace Game.Script
         public abstract void TakeDamage();
         public abstract void SetPosition(Vector2 pos);
         public abstract void Active(bool isActive);
-        public abstract void UpdatePosition(Vector2 pos);
+        public abstract void UpdateTextPosition(Vector2 pos);
 
         public virtual void OnEndTurn()
         {

@@ -1,6 +1,8 @@
 using System;
+using System.IO;
 using DG.Tweening;
 using Game.Script.UI;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Game.Script.ModePlay
@@ -12,48 +14,30 @@ namespace Game.Script.ModePlay
         [SerializeField] private int sumBallSpecial = 9;
 
         public Action<int> eventUpdateScoreTower;
+        private int levelCurrent;
 
-        private readonly int[,] _lsMap = new int[,]
-        {
-            { 1, 1, 1, 1, 1, 1, 1 },
-            { 0, 1, 1, 1, 1, 1, 1 },
-            { 0, 2, 1, 1, 1, 1, 1 },
-            { 0, 1, 1, 1, 1, 1, 1 },
-            { 4, 1, 1, 1, 3, 1, 1 },
-            { 0, 1, 1, 1, 1, 1, 1 },
-            { 0, 1, 1, 1, 1, 1, 1 },
-            { 1, 1, 1, 2, 1, 1, 1 },
-            { 0, 1, 1, 1, 1, 1, 1 },
-            { 0, 1, 1, 1, 1, 1, 1 },
-            { 0, 1, 1, 1, 1, 3, 1 },
-            { 0, 0, 3, 0, 1, 3, 1 },
-            { 7, 8, 9, 10, 11, 1, 1 },
-            { 0, 1, 2, 1, 1, 5, 1 },
-        };
-    
-        private readonly int[,] _lsNumber = new int[,]
-        {
-            { 1, 1, 1, 1, 1, 1, 1 },
-            { 1, 1, 1, 1, 2, 1, 1 },
-            { 1, 2, 1, 3, 1, 1, 2 },
-            { 1, 1, 1, 1, 2, 3, 1 },
-            { 4, 1, 3, 1, 1, 1, 1 },
-            { 0, 1, 1, 1, 1, 1, 1 },
-            { 0, 1, 1, 1, 3, 1, 2 },
-            { 1, 1, 1, 3, 1, 1, 1 },
-            { 3, 1, 3, 1, 1, 1, 2 },
-            { 1, 1, 1, 1, 1, 1, 1 },
-            { 1, 3, 1, 3, 2, 1, 3 },
-            { 1, 2, 1, 1, 1, 1, 1 },
-            { 1, 1, 100, 100, 100, 100, 10 },
-            { 100, 2, 1, 1, 1, 1, 3 },
-        };
-    
+        private int[,] _lsMap;
+        private int[,] _lsNumber;
+
         public override void StartGame(int level)
         {
+            ReadFile(level);
+            levelCurrent = level;
             currentRow = 4;
             ballController.Play(startBall);
             brickController.CreateBrickWithMap(_lsMap, _lsNumber, currentRow);
+            GameManager.PlayTower();
+        }
+
+        private void ReadFile(int level)
+        {
+            string path = "Assets/Resources/level" + level % 10 + ".txt";
+            StreamReader reader = new StreamReader(path);
+            var str = reader.ReadLine();
+            if (str != null) _lsMap = JsonConvert.DeserializeObject<int[,]>(str);
+            str = reader.ReadLine();
+            if (str != null) _lsNumber = JsonConvert.DeserializeObject<int[,]>(str);
+            reader.Close();
         }
 
         public override void AfterTurn()
@@ -64,6 +48,7 @@ namespace Game.Script.ModePlay
                 ballController.AfterSpecialTurn(sumBallSpecial);
                 isSpecialTurn = false;
             }
+
             ballController.AfterTurn();
 
             brickController.AfterTurn();
@@ -71,8 +56,11 @@ namespace Game.Script.ModePlay
             if (brickController.IsClearMap())
             {
                 Debug.Log("Victory");
-                PopupManager.Show<UIResult>();
+                GameController.ins.gameState = GamePlayState.Victory;
+                PopupManager.Show<UIVictory>();
+                GameManager.Victory(levelCurrent, 3);
             }
+
             if (brickController.IsSpecialTurn())
             {
                 GameController.ins.SpecialTurn();

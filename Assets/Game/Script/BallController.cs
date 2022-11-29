@@ -13,7 +13,7 @@ namespace Game.Script
     {
         [SerializeField] private GameObject btnBallReturn;
         public static BallController ins;
-        private bool isFly = false; 
+        private bool isFly = false;
         public BallScript ball;
         public GameObject direcBall;
         public GameObject addBall;
@@ -33,7 +33,7 @@ namespace Game.Script
         private Coroutine _corShootBall;
 
         public GameObject fxSpecialBall;
-        
+
         private void Awake()
         {
             ins = this;
@@ -48,7 +48,7 @@ namespace Game.Script
 
         void Update()
         {
-            if (EventSystem.current.currentSelectedGameObject)
+            if (EventSystem.current.currentSelectedGameObject || GameController.ins.gameState != GamePlayState.Playing)
             {
                 return;
             }
@@ -208,12 +208,12 @@ namespace Game.Script
         {
             for (int i = 0; i < ballCount; i++)
             {
-                var newBall = Instantiate(ball,parentBall,true);
+                var newBall = Instantiate(ball, parentBall, true);
                 newBall.transform.position = position;
                 lsBalls.Add(newBall);
             }
 
-            var pos = lsBalls[0].transform.position + new Vector3(0.4f,0,0);
+            var pos = lsBalls[0].transform.position + new Vector3(0.4f, 0, 0);
             textSumBall.GetComponent<RectTransform>().anchoredPosition = GameController.ins.cam.WorldToScreenPoint(pos);
             textSumBall.transform.SetParent(parentTxtBall);
             textSumBall.gameObject.SetActive(true);
@@ -264,7 +264,7 @@ namespace Game.Script
             ballFirstFall = null;
             _ballFall = 0;
             textSumBall.transform.SetParent(null);
-            var pos = lsBalls[0].transform.position + new Vector3(0.4f,0,0);
+            var pos = lsBalls[0].transform.position + new Vector3(0.4f, 0, 0);
             textSumBall.GetComponent<RectTransform>().anchoredPosition = GameController.ins.cam.WorldToScreenPoint(pos);
             textSumBall.transform.SetParent(BrickController.ins.parentText);
         }
@@ -287,13 +287,13 @@ namespace Game.Script
 
             sumAddBall += sumBall;
         }
-        
+
         public void SpecialTurn(int countAddBall)
         {
             var fx = Instantiate(fxSpecialBall);
             fx.transform.position = lsBalls[0].transform.position;
             Destroy(fx, 1);
-            CreateBall(countAddBall,lsBalls[0].transform.position);
+            CreateBall(countAddBall, lsBalls[0].transform.position);
         }
 
         public void AfterSpecialTurn(int countAddBall)

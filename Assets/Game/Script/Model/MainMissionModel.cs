@@ -26,11 +26,20 @@ public class MainMissionModel
 
     public void Init()
     {
-        var data = Resources.Load<MainMissionData>("MainMission");
-        missionInfos = new List<MainMissionInfo>();
-        for (int i = 0; i < data.lsMissionMain.Count; i++)
+        if (PlayerPrefs.HasKey("MainMission"))
         {
-            missionInfos.Add(MainMissionInfo.InitNew(data.lsMissionMain[i]));
+            Load();
+        }
+        else
+        {
+            var data = Resources.Load<MainMissionData>("MainMission");
+            missionInfos = new List<MainMissionInfo>();
+            for (int i = 0; i < data.lsMissionMain.Count; i++)
+            {
+                missionInfos.Add(MainMissionInfo.InitNew(data.lsMissionMain[i]));
+            }
+
+            Save();
         }
     }
 
@@ -73,12 +82,12 @@ public class MainMissionModel
     public void Save()
     {
         var json = JsonConvert.SerializeObject(missionInfos);
-        PlayerPrefs.SetString("mainMission", json);
+        PlayerPrefs.SetString("MainMission", json);
     }
 
     public void Load()
     {
-        var dataStr = PlayerPrefs.GetString("mainMission");
+        var dataStr = PlayerPrefs.GetString("MainMission");
         missionInfos = JsonConvert.DeserializeObject<List<MainMissionInfo>>(dataStr);
     }
 }

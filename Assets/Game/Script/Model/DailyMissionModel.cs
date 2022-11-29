@@ -4,7 +4,7 @@ using Game.Script.Data;
 using Newtonsoft.Json;
 using UnityEngine;
 
-namespace Game.Script.Mission
+namespace Game.Script.Model
 {
     public class DailyMissionModel
     {
@@ -27,11 +27,19 @@ namespace Game.Script.Mission
 
         public void Init()
         {
-            var data = Resources.Load<DailyMissionData>("DailyMission");
-            missionInfos = new List<DailyMissionInfo>();
-            for (int i = 0; i < data.lsMissionDaily.Count; i++)
+            if (PlayerPrefs.HasKey("DailyMission"))
             {
-                missionInfos.Add(DailyMissionInfo.InitNew(data.lsMissionDaily[i]));
+                Load();
+            }
+            else
+            {
+                var data = Resources.Load<DailyMissionData>("DailyMission");
+                missionInfos = new List<DailyMissionInfo>();
+                for (int i = 0; i < data.lsMissionDaily.Count; i++)
+                {
+                    missionInfos.Add(DailyMissionInfo.InitNew(data.lsMissionDaily[i]));
+                }
+                Save();
             }
         }
 
@@ -71,6 +79,7 @@ namespace Game.Script.Mission
         {
             var json = JsonConvert.SerializeObject(missionInfos);
             PlayerPrefs.SetString("DailyMission", json);
+            PlayerPrefs.Save();
         }
 
         public void Load()

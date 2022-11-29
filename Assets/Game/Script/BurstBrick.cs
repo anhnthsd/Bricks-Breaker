@@ -59,12 +59,15 @@ namespace Game.Script
             gameObject.SetActive(isActive);
         }
 
-        public override void UpdatePosition(Vector2 pos)
+        private void Update()
         {
-            // transform.position = pos;
+            UpdateTextPosition(transform.position);
+        }
+
+        public override void UpdateTextPosition(Vector2 pos)
+        {
             textBrick.transform.SetParent(null);
-            // textBrick.GetComponent<RectTransform>().anchoredPosition = GameController.ins.cam.WorldToScreenPoint(pos);
-            textBrick.GetComponent<RectTransform>().DOMove(GameController.ins.cam.WorldToScreenPoint(pos), 0.2f);
+            textBrick.GetComponent<RectTransform>().anchoredPosition = GameController.ins.cam.WorldToScreenPoint(pos);
             textBrick.transform.SetParent(BrickController.ins.parentText);
         }
 

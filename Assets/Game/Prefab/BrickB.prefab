@@ -98,6 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ce035e43f8e48b69143175e73d0d731, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  typeOfBrick: 0
   srBrick: {fileID: 2520308381638796919}
   colBrick: {fileID: 295050739048228910}
   i: 0
@@ -106,17 +107,17 @@ MonoBehaviour:
   textBrick: {fileID: 0}
   fxBrick: {fileID: 854858744462582526, guid: 5b3109f610cc31746a19a5e7b92d4bdc, type: 3}
   lsBrickSprites:
-  - {fileID: 21300000, guid: f4b7720d04784494b97f1a61a0d8d78e, type: 3}
-  - {fileID: 21300000, guid: cbdee478d7deda448bd5aa9b58c9e2d4, type: 3}
-  - {fileID: 21300000, guid: 6e45d21f7f76676418b7ef6411c9b5bc, type: 3}
-  - {fileID: 21300000, guid: 38671e2ecb9729f4085b5ffba21c680f, type: 3}
-  - {fileID: 21300000, guid: ba56f8631b3479b44a256c1da10adf69, type: 3}
-  - {fileID: 21300000, guid: 56646abc8e93f1448b45e59a3896445a, type: 3}
-  - {fileID: 21300000, guid: 1bf3d89af08439e48b67746cd89cb542, type: 3}
-  - {fileID: 21300000, guid: bd3ad83069a8b9244aec8cefe3da723f, type: 3}
-  - {fileID: 21300000, guid: 9f4d87ab84f5385428cd89fe13925590, type: 3}
-  - {fileID: 21300000, guid: c74c2094b32cb934fbc07b3a91798150, type: 3}
-  - {fileID: 21300000, guid: 2c74f1ce8675b49458cf2a5d62bdb198, type: 3}
+  - {fileID: 21300000, guid: 4444aa1af15264b4185020bc54145d41, type: 3}
+  - {fileID: 21300000, guid: eec086be14c7f9c4d9b5dd7a09e499c1, type: 3}
+  - {fileID: 21300000, guid: 73b8d610f61178344b8f44fa18585bd0, type: 3}
+  - {fileID: 21300000, guid: 46b841b134b92bf4dbf3045039cf3aae, type: 3}
+  - {fileID: 21300000, guid: 075ddd0c9f639b349ac0f7bf80e1f970, type: 3}
+  - {fileID: 21300000, guid: 2f5854ea0e56f9f47afc99902112d7a3, type: 3}
+  - {fileID: 21300000, guid: 7fd6fcf484f82eb409f03809bb6a8d3c, type: 3}
+  - {fileID: 21300000, guid: ca9f2eee2959a1546ba2a5c0e086e89c, type: 3}
+  - {fileID: 21300000, guid: 0b5c002af108b034a8ee7a5705463e96, type: 3}
+  - {fileID: 21300000, guid: 5954c2f53e9e3494787513bfbabb9cfe, type: 3}
+  - {fileID: 21300000, guid: aa6be5a0fe6044f4ca1c41439b5539e5, type: 3}
 --- !u!60 &295050739048228910
 PolygonCollider2D:
   m_ObjectHideFlags: 0

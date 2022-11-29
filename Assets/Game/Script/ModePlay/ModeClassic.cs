@@ -1,4 +1,6 @@
 using System;
+using Game.Script.Data;
+using Game.Script.Model;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -46,6 +48,7 @@ namespace Game.Script.ModePlay
             currentRow = 1;
             ballController.Play(startBall);
             brickController.CreateBrickWithMap(_lsMap, _lsNumber, currentRow);
+            GameManager.PlayClassic();
         }
 
         public override void AfterTurn()

@@ -13,18 +13,18 @@ namespace Game.Script.UI
         [SerializeField] private GameObject imgLock;
 
         public Sprite whiteStar;
-        public bool _isLook;
+        public bool _isLock;
         private int level;
 
         public Action<int> OpenLevel;
-        public void SetLevel(int lvl, bool isLook = true, int sumStar = 0, Action<int> onClick= null)
+
+        public void SetLevel(int lvl, bool isLock = true, int sumStar = 0, Action<int> onClick = null)
         {
             level = lvl;
             txtLvl.text = lvl.ToString();
-            _isLook = isLook;
-            imgLock.SetActive(isLook);
-            star.SetActive(!isLook);
-
+            imgLock.SetActive(isLock);
+            star.SetActive(!isLock);
+            SetLock(isLock);
             for (var i = 0; i < sumStar; i++)
             {
                 lsStar[i].sprite = whiteStar;
@@ -33,10 +33,15 @@ namespace Game.Script.UI
             OpenLevel = onClick;
         }
 
+        private void SetLock(bool isLock)
+        {
+            _isLock = isLock;
+            gameObject.GetComponent<Button>().interactable = !isLock;
+        }
+
         public void Select()
         {
             OpenLevel?.Invoke(level);
         }
-        
     }
 }

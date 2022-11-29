@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using DG.Tweening;
+using Game.Script;
+using Game.Script.Data;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -51,6 +53,7 @@ namespace Game.Script
             _lsNumber = lsNumber;
             _currentRow = rows;
 
+            y = parentBrick.position.y;
             lsBrick = new BaseBrick[lsMap.GetLongLength(0), lsMap.GetLongLength(1)];
             for (int j = lsBrick.GetLength(1) - 1; j >= 0; j--)
             {
@@ -68,59 +71,17 @@ namespace Game.Script
         {
             _lsMap = lsMap;
             _lsNumber = lsNumber;
-            _currentRow = 0;
             Debug.Log("AddNewMap");
         }
 
         public void CreateNewBrick(int i, int j, TypeOfBrick brickType, int number, bool isActive)
         {
-            BaseBrick brickNew = null;
-            switch (brickType)
-            {
-                case TypeOfBrick.Normal:
-                    brickNew = Instantiate(listBricks[0]);
-                    break;
-                case TypeOfBrick.Triangle:
-                    brickNew = Instantiate(listBricks[1]);
-                    brickNew.transform.rotation = Quaternion.Euler(0, 0, 180);
-                    break;
-                case TypeOfBrick.DeleteHorizontal:
-                    brickNew = Instantiate(listBricks[4]);
-                    brickNew.GetComponent<BaseBrick>().SetSprite(TypeOfBrick.DeleteHorizontal);
-                    break;
-                case TypeOfBrick.DeleteVertical:
-                    brickNew = Instantiate(listBricks[4]);
-
-                    brickNew.GetComponent<BaseBrick>().SetSprite(TypeOfBrick.DeleteVertical);
-                    break;
-                case TypeOfBrick.DeleteBoth:
-                    brickNew = Instantiate(listBricks[4]);
-                    brickNew.GetComponent<BaseBrick>().SetSprite(TypeOfBrick.DeleteBoth);
-                    break;
-                case TypeOfBrick.DeleteSurround:
-                    brickNew = Instantiate(listBricks[4]);
-                    brickNew.GetComponent<BaseBrick>().SetSprite(TypeOfBrick.DeleteSurround);
-                    break;
-                case TypeOfBrick.AddBall:
-                    brickNew = Instantiate(listBricks[2]);
-                    break;
-                case TypeOfBrick.DamageHorizontal:
-                    brickNew = Instantiate(listBricks[3]);
-                    brickNew.GetComponent<BaseBrick>().SetSprite(TypeOfBrick.DamageHorizontal);
-                    break;
-                case TypeOfBrick.DamageVertical:
-                    brickNew = Instantiate(listBricks[3]);
-                    brickNew.GetComponent<BaseBrick>().SetSprite(TypeOfBrick.DamageVertical);
-                    break;
-                case TypeOfBrick.DamageBoth:
-                    brickNew = Instantiate(listBricks[3]);
-                    brickNew.GetComponent<BaseBrick>().SetSprite(TypeOfBrick.DamageBoth);
-                    break;
-                case TypeOfBrick.ShootRandom:
-                    brickNew = Instantiate(listBricks[5]);
-                    break;
-            }
-
+            var prefab = Resources.Load<DataBrick>("DataBrick").brickInfo
+                .Find(s => s.type == brickType)
+                .prefab;
+            BaseBrick brickNew = Instantiate(prefab);
+            brickNew.GetComponent<BaseBrick>().SetSprite(brickType);
+            
             if (brickNew)
             {
                 brickNew.transform.SetParent(parentBrick);
@@ -147,20 +108,23 @@ namespace Game.Script
         }
 
 
+        private float y = 0f;
+
         public void AfterTurn()
         {
-            var newPosition = parentBrick.position - new Vector3(0, 0.8f, 0);
+            y -= 0.8f;
+            var newPosition = new Vector3(parentBrick.position.x, y, 0);
             parentBrick.transform.DOMove(newPosition, 0.2f);
-            
+
             for (int i = 0; i < lsBrick.GetLength(0); i++)
             {
                 for (int j = 0; j < lsBrick.GetLength(1); j++)
                 {
                     if (lsBrick[i, j])
                     {
-                        var newPos = new Vector3(lsBrick[i, j].transform.position.x,
-                            lsBrick[i, j].transform.position.y - 0.8f, 0);
-                        lsBrick[i, j].UpdatePosition(newPos);
+                        // var newPos = new Vector3(lsBrick[i, j].transform.position.x,
+                        //     lsBrick[i, j].transform.position.y - 0.8f, 0);
+                        // lsBrick[i, j].UpdatePosition(newPos);
 
                         if ((lsBrick.GetLength(0) - 1 - _currentRow + MAX_ROW - 1) == i)
                         {
@@ -174,7 +138,7 @@ namespace Game.Script
                                 if (lsBrick[i, j].typeOfBrick == TypeOfBrick.AddBall)
                                 {
                                     var itemS = lsBrick[i, j].GetComponent<ItemAddBall>();
-                                    ballController.CreateNewBall(newPos, itemS.sumBall);
+                                    ballController.CreateNewBall(lsBrick[i, j].transform.position, itemS.sumBall);
                                     itemS.DestroyBrick();
                                 }
                                 else

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Game.Script.Model;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +13,9 @@ namespace Game.Script.UI
 
         public GameObject lvlItemPrefab;
         public Transform contentScroll;
+        private LevelTowerModel _levelTowerModel;
+
+        private List<LvlItem> _lsLvlItems;
 
         public override void Initialize()
         {
@@ -19,22 +24,42 @@ namespace Game.Script.UI
             btnModeTower.onClick.AddListener(() => PlayGame(GameMode.Tower));
             SetScroll();
         }
-        
+
+        public override void Show()
+        {
+            base.Show();
+            UpdateScroll();
+        }
 
         private void PlayGame(GameMode gameMode, int level = 0)
         {
             GameController.ins.PlayGame(gameMode, level);
-            UIManager.Show<UIGamePlay>(); 
+            UIManager.Show<UIGamePlay>();
         }
 
         private void SetScroll()
         {
-            for (int i = 0; i < 20; i++)
+            _levelTowerModel = LevelTowerModel.Ins;
+            _lsLvlItems = new List<LvlItem>();
+            for (int i = 0; i < _levelTowerModel.levelInfos.Count; i++)
             {
                 var newItem = Instantiate(lvlItemPrefab, contentScroll);
                 var script = newItem.GetComponent<LvlItem>();
                 script.SetLevel
-                    (i + 1, i >= 17, Random.Range(0, 4), (i1) => PlayGame(GameMode.Tower, i1));
+                (_levelTowerModel.levelInfos[i].level, i >= UserModel.Ins.userData.levelTower,
+                    _levelTowerModel.levelInfos[i].star, (i1) => PlayGame(GameMode.Tower, i1));
+                _lsLvlItems.Add(script);
+            }
+        }
+
+        private void UpdateScroll()
+        {
+            var list = _levelTowerModel.levelInfos;
+            for (int i = 0; i < list.Count; i++)
+            {
+                _lsLvlItems[i].SetLevel
+                (list[i].level, i >= UserModel.Ins.userData.levelTower, list[i].star,
+                    (i1) => PlayGame(GameMode.Tower, i1));
             }
         }
     }

@@ -1,6 +1,7 @@
+using System;
 using DG.Tweening;
 using Game.Script.Data;
-using Game.Script.Mission;
+using Game.Script.Model;
 using Game.Script.UI;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,7 +17,9 @@ namespace Game.Script
         [SerializeField] private BaseModePlay[] modePlays;
         public bool isEndGame = false;
         public GameObject goPlay;
-        
+
+        public GamePlayState gameState;
+
         private void Awake()
         {
             ins = this;
@@ -29,10 +32,16 @@ namespace Game.Script
 
         public void PlayGame(GameMode gameMode, int level)
         {
+            gameState = GamePlayState.Playing;
             goPlay.SetActive(true);
             currentMode = modePlays[(int)gameMode];
             currentMode.gameObject.SetActive(true);
             currentMode.StartGame(level);
+        }
+
+        public void NextLevel(int level)
+        {
+            
         }
 
         public void AfterTurn()
@@ -52,7 +61,8 @@ namespace Game.Script
         {
             currentMode.EndGame();
             isEndGame = true;
-            PopupManager.Show<UIResult>();
+            gameState = GamePlayState.Lose;
+            PopupManager.Show<UIVictory>();
         }
 
         public void EndMap()
@@ -70,9 +80,18 @@ namespace Game.Script
             return currentMode.Score;
         }
 
-        public void Btn()
+        public void BtnStop()
         {
-            currentMode.Btn();
+            if (Time.timeScale == 0)
+            {
+                Time.timeScale = 1;
+                gameState = GamePlayState.Playing;
+            }
+            else
+            {
+                Time.timeScale = 0;
+                gameState = GamePlayState.Stop;
+            }
         }
     }
 }
@@ -80,7 +99,9 @@ namespace Game.Script
 public enum GamePlayState
 {
     Start,
+    Stop,
     Playing,
     Victory,
-    Lose
+    Lose,
+    Done
 }

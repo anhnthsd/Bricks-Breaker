@@ -54,7 +54,7 @@ namespace Game.Script
             gameObject.SetActive(isActive);
         }
 
-        public override void UpdatePosition(Vector2 pos)
+        public override void UpdateTextPosition(Vector2 pos)
         {
             // transform.position = pos;
         }
