@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.Serialization;
+﻿using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Game.Script
@@ -29,7 +27,7 @@ namespace Game.Script
             if (isOver)
             {
                 gameObject.SetActive(false);
-                BrickController.ins.DelBrick(i, j);
+                GameController.ins.DelBrick(i, j);
             }
             else
             {
@@ -39,12 +37,6 @@ namespace Game.Script
 
         public override void SetSprite(TypeOfBrick type)
         {
-        }
-
-        public void TakeItemBurst()
-        {
-            gameObject.SetActive(false);
-            BrickController.ins.DelBrick(i, j);
         }
 
         public override void TakeDamage()
@@ -60,12 +52,6 @@ namespace Game.Script
         {
             gameObject.SetActive(isActive);
         }
-
-        public override void UpdateTextPosition(Vector2 pos)
-        {
-            // transform.position = pos;
-        }
-
 
         private void OnTriggerEnter2D(Collider2D col)
         {

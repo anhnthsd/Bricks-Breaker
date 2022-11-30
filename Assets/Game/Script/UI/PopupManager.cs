@@ -24,7 +24,6 @@ namespace Game.Script.UI
                 popViews[i].Initialize();
                 popViews[i].Hide();
             }
-            
         }
 
         public static T GetView<T>() where T : View
@@ -46,7 +45,7 @@ namespace Game.Script.UI
             {
                 if (ins.popViews[i] is T)
                 {
-                    if (ins._currentPopup != null)
+                    if (ins._currentPopup != null && ins._currentPopup != ins.popViews[i])
                     {
                         if (remember)
                         {

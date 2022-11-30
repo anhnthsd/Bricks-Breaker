@@ -16,7 +16,7 @@ namespace Game.Script
                 rigi.velocity = Vector2.zero;
                 transform.position = new Vector3(transform.position.x, -3.33f);
                 state = StateBall.Done;
-                BallController.ins.OnBallFall();
+                GameController.ins.OnBallFall();
             }
         }
 
@@ -35,6 +35,11 @@ namespace Game.Script
             {
                 state = StateBall.Start;
             }));
+        }
+
+        public void Remove()
+        {
+            Destroy(gameObject);
         }
     }
 }

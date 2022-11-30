@@ -1,25 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using DG.Tweening;
-using Game.Script;
-using Game.Script.Data;
-using TMPro;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Game.Script
 {
     public class BrickController : MonoBehaviour
     {
-        public static BrickController ins;
-        public Camera cam;
         public BallController ballController;
 
-        public List<BaseBrick> listBricks;
-        public List<BaseBrick> listBaseBricks;
         public Transform parentBrick;
-        public TextMeshProUGUI textPrefab;
-        public Transform parentText;
         public BaseBrick[,] lsBrick;
 
         public GameObject fxDamage;
@@ -37,15 +26,6 @@ namespace Game.Script
         private const int MAX_ROW = 8;
         private const float BRICK = 0.8f;
 
-        private void Awake()
-        {
-            ins = this;
-        }
-
-        private void Start()
-        {
-            cam = Camera.main;
-        }
 
         public void CreateBrickWithMap(int[,] lsMap, int[,] lsNumber, int rows)
         {
@@ -57,12 +37,11 @@ namespace Game.Script
             lsBrick = new BaseBrick[lsMap.GetLongLength(0), lsMap.GetLongLength(1)];
             for (int j = lsBrick.GetLength(1) - 1; j >= 0; j--)
             {
-                for (int i = 0; i < lsBrick.GetLength(0); i++)
+                for (int i = lsBrick.GetLength(0) - 1; i > lsBrick.GetLength(0) - 1 - _currentRow; i--)
                 {
                     var brickType = (TypeOfBrick)lsMap[i, j];
                     var number = lsNumber[i, j];
-                    bool isActive = i > lsBrick.GetLength(0) - 1 - _currentRow;
-                    CreateNewBrick(i, j, brickType, number, isActive);
+                    CreateNewBrick(i, j, brickType, number);
                 }
             }
         }
@@ -74,21 +53,23 @@ namespace Game.Script
             Debug.Log("AddNewMap");
         }
 
-        public void CreateNewBrick(int i, int j, TypeOfBrick brickType, int number, bool isActive)
+        public void CreateNewBrick(int i, int j, TypeOfBrick brickType, int number)
         {
-            var prefab = Resources.Load<DataBrick>("DataBrick").brickInfo
-                .Find(s => s.type == brickType)
-                .prefab;
-            BaseBrick brickNew = Instantiate(prefab);
-            brickNew.GetComponent<BaseBrick>().SetSprite(brickType);
-            
+            if (brickType == TypeOfBrick.Empty) return;
+            // var prefab = Resources.Load<DataBrick>("DataBrick").brickInfo
+            //     .Find(s => s.type == brickType)
+            //     .prefab;
+            // BaseBrick brickNew = Instantiate(prefab);
+            // brickNew.GetComponent<BaseBrick>().SetSprite(brickType);
+            BaseBrick brickNew = BrickPooler.BrickInstance.GetObject(brickType);
+
             if (brickNew)
             {
                 brickNew.transform.SetParent(parentBrick);
                 brickNew.SetPosition(new Vector2(
                     -2.45f + 0.8f * j,
                     (0.8f * lsBrick.GetLength(0)) + 1.8f - 0.8f * (_currentRow - 1) - 0.8f * i));
-                brickNew.Active(isActive);
+                brickNew.Active(true);
                 brickNew.OnSpawn(number);
                 brickNew.typeOfBrick = brickType;
                 brickNew.i = i;
@@ -122,13 +103,8 @@ namespace Game.Script
                 {
                     if (lsBrick[i, j])
                     {
-                        // var newPos = new Vector3(lsBrick[i, j].transform.position.x,
-                        //     lsBrick[i, j].transform.position.y - 0.8f, 0);
-                        // lsBrick[i, j].UpdatePosition(newPos);
-
                         if ((lsBrick.GetLength(0) - 1 - _currentRow + MAX_ROW - 1) == i)
                         {
-                            Debug.Log((lsBrick.GetLength(0) - 1 - _currentRow + MAX_ROW - 1) + " _ " + i);
                             if (lsBrick[i, j].CanDieOnBottom())
                             {
                                 GameController.ins.EndGame();
@@ -162,10 +138,14 @@ namespace Game.Script
 
             for (int j = 0; j < lsBrick.GetLength(1); j++)
             {
-                if (lsBrick[lsBrick.GetLength(0) - 1 - _currentRow, j])
-                {
-                    lsBrick[lsBrick.GetLength(0) - 1 - _currentRow, j].Active(true);
-                }
+                // if (lsBrick[lsBrick.GetLength(0) - 1 - _currentRow, j])
+                // {
+                //     lsBrick[lsBrick.GetLength(0) - 1 - _currentRow, j].Active(true);
+                // }
+
+                var brickType = (TypeOfBrick)_lsMap[lsBrick.GetLength(0) - 1 - _currentRow, j];
+                var number = _lsNumber[lsBrick.GetLength(0) - 1 - _currentRow, j];
+                CreateNewBrick(lsBrick.GetLength(0) - 1 - _currentRow, j, brickType, number);
             }
 
             _currentRow++;
@@ -356,6 +336,23 @@ namespace Game.Script
                     OnBurstSurround(hor, ver);
                     ShowFxBurstSur(position);
                     break;
+            }
+        }
+
+        public void OnRestart()
+        {
+            if (lsBrick != null)
+            {
+                for (int i = 0; i < lsBrick.GetLength(0); i++)
+                {
+                    for (int j = 0; j < lsBrick.GetLength(1); j++)
+                    {
+                        if (lsBrick[i, j])
+                        {
+                            lsBrick[i, j].Remove();
+                        }
+                    }
+                }
             }
         }
     }

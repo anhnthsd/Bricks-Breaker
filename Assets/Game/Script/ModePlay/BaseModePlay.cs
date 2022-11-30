@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Game.Script
 {
@@ -28,7 +29,8 @@ namespace Game.Script
 
         public abstract void EndGame();
         public abstract void EndMap();
-        public abstract void IncreaseScore();
+        public abstract void IncreaseScore(Action<int,int> updateScore);
+        public abstract void OnRestart();
         public abstract void Btn();
 
     }

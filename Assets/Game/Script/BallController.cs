@@ -11,8 +11,7 @@ namespace Game.Script
 {
     public class BallController : MonoBehaviour
     {
-        [SerializeField] private GameObject btnBallReturn;
-        public static BallController ins;
+        // [SerializeField] private GameObject btnBallReturn;
         private bool isFly = false;
         public BallScript ball;
         public GameObject direcBall;
@@ -23,8 +22,9 @@ namespace Game.Script
         public List<BallScript> lsBalls;
 
         public Transform parentTxtBall;
+
         public TextMeshProUGUI textPrefab;
-        public TextMeshProUGUI textSumBall;
+        // public TextMeshProUGUI textSumBall;
 
         public LayerMask wallMask;
         public BallScript ballFirstFall;
@@ -34,14 +34,9 @@ namespace Game.Script
 
         public GameObject fxSpecialBall;
 
-        private void Awake()
-        {
-            ins = this;
-        }
-
         public void Play(int startBall)
         {
-            textSumBall = Instantiate(textPrefab);
+            // textSumBall = Instantiate(textPrefab);
             CreateBall(startBall, new Vector2(0, -3.33f));
             CreateDotBall(10, new Vector2(0, -3.33f));
         }
@@ -50,6 +45,7 @@ namespace Game.Script
         {
             if (EventSystem.current.currentSelectedGameObject || GameController.ins.gameState != GamePlayState.Playing)
             {
+                Debug.Log("GameController.ins.gameState:" + GameController.ins.gameState);
                 return;
             }
 
@@ -75,9 +71,9 @@ namespace Game.Script
                         listDotBall[i].SetActive(false);
                 }
 
-                textSumBall.gameObject.SetActive(false);
+                // textSumBall.gameObject.SetActive(false);
                 _corShootBall = StartCoroutine(ShootBall(direction));
-                btnBallReturn.SetActive(true);
+                GameController.ins.ActiveBallReturn(true);
             }
 
             if (Input.GetMouseButton(0))
@@ -213,11 +209,11 @@ namespace Game.Script
                 lsBalls.Add(newBall);
             }
 
-            var pos = lsBalls[0].transform.position + new Vector3(0.4f, 0, 0);
-            textSumBall.GetComponent<RectTransform>().anchoredPosition = GameController.ins.cam.WorldToScreenPoint(pos);
-            textSumBall.transform.SetParent(parentTxtBall);
-            textSumBall.gameObject.SetActive(true);
-            textSumBall.text = lsBalls.Count.ToString();
+            // var pos = lsBalls[0].transform.position + new Vector3(0.4f, 0, 0);
+            // textSumBall.GetComponent<RectTransform>().anchoredPosition = GameController.ins.cam.WorldToScreenPoint(pos);
+            // textSumBall.transform.SetParent(parentTxtBall);
+            // textSumBall.gameObject.SetActive(true);
+            // textSumBall.text = lsBalls.Count.ToString();
         }
 
         public void CreateDotBall(int ballCount, Vector2 position)
@@ -257,16 +253,16 @@ namespace Game.Script
 
         public void AfterTurn()
         {
-            btnBallReturn.SetActive(false);
+            GameController.ins.ActiveBallReturn(false);
             CreateBall(sumAddBall, lsBalls[0].transform.position);
             sumAddBall = 0;
             isFly = false;
             ballFirstFall = null;
             _ballFall = 0;
-            textSumBall.transform.SetParent(null);
-            var pos = lsBalls[0].transform.position + new Vector3(0.4f, 0, 0);
-            textSumBall.GetComponent<RectTransform>().anchoredPosition = GameController.ins.cam.WorldToScreenPoint(pos);
-            textSumBall.transform.SetParent(BrickController.ins.parentText);
+            // textSumBall.transform.SetParent(null);
+            // var pos = lsBalls[0].transform.position + new Vector3(0.4f, 0, 0);
+            // textSumBall.GetComponent<RectTransform>().anchoredPosition = GameController.ins.cam.WorldToScreenPoint(pos);
+            // textSumBall.transform.SetParent(GameController.ins.parentText);
         }
 
         public void CreateNewBall(Vector3 newPos, int sumBall)
@@ -357,6 +353,16 @@ namespace Game.Script
             }
 
             DOVirtual.DelayedCall(0.2f, () => { GameController.ins.AfterTurn(); });
+        }
+
+        public void OnRestart()
+        {
+            for (int i = 0; i < lsBalls.Count; i++)
+            {
+                lsBalls[i].Remove();
+            }
+
+            lsBalls.Clear();
         }
     }
 }

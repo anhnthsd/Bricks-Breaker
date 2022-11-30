@@ -12,7 +12,6 @@ namespace Game.Script.ModePlay
         [SerializeField] private bool isSpecialTurn = false;
         [SerializeField] private int sumBallSpecial = 9;
 
-        public Action<int> eventUpdateScoreClassic;
         private int lvl = 1;
 
         private int[,] _lsMap = new int[,]
@@ -33,7 +32,7 @@ namespace Game.Script.ModePlay
         {
             { 8, 1, 6, 1, 1, 10, 1 },
             { 0, 10, 1, 1, 2, 8, 1 },
-            { 9, 2, 1, 3, 1,9, 2 },
+            { 9, 2, 1, 3, 1, 9, 2 },
             { 0, 1, 7, 1, 2, 3, 3 },
             { 4, 6, 3, 1, 1, 1, 1 },
             { 0, 5, 1, 1, 1, 5, 1 },
@@ -62,7 +61,7 @@ namespace Game.Script.ModePlay
             ballController.AfterTurn();
 
             brickController.AfterTurn();
-            IncreaseScore();
+            GameController.ins.IncreaseScore();
         }
 
         public override void SpecialTurn(int rows = 1)
@@ -78,13 +77,18 @@ namespace Game.Script.ModePlay
         {
             lvl++;
             CreateMap();
-            brickController.AddNewMap(_lsMap,_lsNumber);
+            brickController.AddNewMap(_lsMap, _lsNumber);
         }
 
-        public override void IncreaseScore()
+        public override void IncreaseScore(Action<int,int> updateScore)
         {
             Score++;
-            eventUpdateScoreClassic?.Invoke(Score);
+            updateScore?.Invoke(Score,0);
+        }
+
+        public override void OnRestart()
+        {
+            Score = 0;
         }
 
         public override void Btn()

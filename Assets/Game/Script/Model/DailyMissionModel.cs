@@ -41,6 +41,17 @@ namespace Game.Script.Model
                 }
                 Save();
             }
+            
+            // Load();
+            // for (int i = 0; i < missionInfos.Count; i++)
+            // {
+            //     if (missionInfos[i].isComplete)
+            //     {
+            //         missionInfos[i].canClaim = true;
+            //     }
+            // }
+            //
+            // Save();
         }
 
         public void ReportMission(TypeMissionDaily typeMissionDaily, int progress = 1)
@@ -62,17 +73,20 @@ namespace Game.Script.Model
             Save();
         }
 
-        public void Claim(TypeMissionDaily typeMissionDaily)
+        public int Claim(TypeMissionDaily typeMissionDaily)
         {
+            var diamond = 0;
             for (int i = 0; i < missionInfos.Count; i++)
             {
                 if (typeMissionDaily.Equals(missionInfos[i].type))
                 {
                     missionInfos[i].canClaim = false;
+                    diamond = missionInfos[i].amountDiamond;
                 }
             }
 
             Save();
+            return diamond;
         }
 
         public void Save()

@@ -16,11 +16,13 @@ namespace Game.Script
 
         public abstract void SetSprite(TypeOfBrick type);
 
-        //public abstract void TakeItemBurst();
         public abstract void TakeDamage();
         public abstract void SetPosition(Vector2 pos);
         public abstract void Active(bool isActive);
-        public abstract void UpdateTextPosition(Vector2 pos);
+
+        public virtual void UpdateTextPosition(Vector2 pos)
+        {
+        }
 
         public virtual void OnEndTurn()
         {
@@ -54,7 +56,15 @@ namespace Game.Script
             if (gameObject.activeInHierarchy)
             {
                 gameObject.SetActive(false);
-                BrickController.ins.DelBrick(i, j);
+                GameController.ins.DelBrick(i, j);
+            }
+        }
+        public virtual void Remove()
+        {
+            if (gameObject.activeInHierarchy)
+            {
+                gameObject.SetActive(false);
+                GameController.ins.DelBrick(i, j);
             }
         }
     }

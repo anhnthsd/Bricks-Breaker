@@ -41,6 +41,17 @@ public class MainMissionModel
 
             Save();
         }
+
+        // Load();
+        // for (int i = 0; i < missionInfos.Count; i++)
+        // {
+        //     if (missionInfos[i].isComplete)
+        //     {
+        //         missionInfos[i].canClaim = true;
+        //     }
+        // }
+        //
+        // Save();
     }
 
     public void ReportMission(TypeMissionMain typeMissionMain, int amount = 1)
@@ -61,14 +72,16 @@ public class MainMissionModel
         Save();
     }
 
-    public void Claim(TypeMissionMain typeMissionMain)
+    public int Claim(TypeMissionMain typeMissionMain)
     {
+        int diamond = 0;
         for (int i = 0; i < missionInfos.Count; i++)
         {
             if (typeMissionMain.Equals(missionInfos[i].type))
             {
                 if (missionInfos[i].canClaim)
                 {
+                    diamond = missionInfos[i].amountDiamond;
                     missionInfos[i].canClaim = false;
                     missionInfos[i].isComplete = false;
                     missionInfos[i].requirement += missionInfos[i].increaseRequirement;
@@ -77,6 +90,7 @@ public class MainMissionModel
         }
 
         Save();
+        return diamond;
     }
 
     public void Save()

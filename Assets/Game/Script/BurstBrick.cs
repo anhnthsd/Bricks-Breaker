@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DG.Tweening;
+using Game.Script.Data;
 using TMPro;
 using UnityEngine;
 
@@ -12,7 +13,6 @@ namespace Game.Script
         public int hpBrick;
         public TextMeshProUGUI textBrick;
         public GameObject fxBrick;
-        public List<Sprite> lsBrickSprites;
 
         public override void OnSpawn(int hp)
         {
@@ -22,35 +22,32 @@ namespace Game.Script
 
         public override void SetSprite(TypeOfBrick type)
         {
+            var lsBrickSprites = Resources.Load<DataBrick>("DataBrick").brickInfo.Find(s => s.type == type)
+                .lsSprite;
             this.type = type;
             switch (type)
             {
                 case TypeOfBrick.DeleteHorizontal:
-                    srBrick.sprite = lsBrickSprites[1];
-                    break;
-                case TypeOfBrick.DeleteVertical:
-                    srBrick.sprite = lsBrickSprites[2];
-                    break;
-                case TypeOfBrick.DeleteBoth:
-                    srBrick.sprite = lsBrickSprites[3];
-                    break;
-                default:
                     srBrick.sprite = lsBrickSprites[0];
                     break;
+                case TypeOfBrick.DeleteVertical:
+                    srBrick.sprite = lsBrickSprites[1];
+                    break;
+                case TypeOfBrick.DeleteBoth:
+                    srBrick.sprite = lsBrickSprites[2];
+                    break;
+                default:
+                    srBrick.sprite = lsBrickSprites[3];
+                    break;
             }
-        }
-
-        public void TakeItemBurst()
-        {
-            DestroyBrick();
         }
 
         public override void SetPosition(Vector2 pos)
         {
             transform.position = pos;
-            textBrick = Instantiate(BrickController.ins.textPrefab);
+            textBrick = Instantiate(GameController.ins.textPrefab);
             textBrick.GetComponent<RectTransform>().anchoredPosition = GameController.ins.cam.WorldToScreenPoint(pos);
-            textBrick.transform.SetParent(BrickController.ins.parentText);
+            textBrick.transform.SetParent(GameController.ins.parentText);
         }
 
         public override void Active(bool isActive)
@@ -68,7 +65,7 @@ namespace Game.Script
         {
             textBrick.transform.SetParent(null);
             textBrick.GetComponent<RectTransform>().anchoredPosition = GameController.ins.cam.WorldToScreenPoint(pos);
-            textBrick.transform.SetParent(BrickController.ins.parentText);
+            textBrick.transform.SetParent(GameController.ins.parentText);
         }
 
         private void OnCollisionEnter2D(Collision2D col)
@@ -96,7 +93,13 @@ namespace Game.Script
         {
             base.DestroyBrick();
             textBrick.gameObject.SetActive(false);
-            BrickController.ins.OnBurst(transform.position, i, j, type);
+            GameController.ins.OnBurst(transform.position, i, j, type);
+        }
+
+        public override void Remove()
+        {
+            base.Remove();
+            textBrick.gameObject.SetActive(false);
         }
     }
 }

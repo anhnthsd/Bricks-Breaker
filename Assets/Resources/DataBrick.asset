@@ -12,3 +12,80 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adec0c6e98a641fe8b1c4f7254a46ae6, type: 3}
   m_Name: DataBrick
   m_EditorClassIdentifier: 
+  brickInfo:
+  - type: 1
+    prefab: {fileID: -1468402543422352644, guid: 70957de9c61167c4fb74f5aa7e01dd4c, type: 3}
+    lsSprite:
+    - {fileID: 21300000, guid: 19c8ee20efa54f142aeb5789690f191d, type: 3}
+    - {fileID: 21300000, guid: e584443750f60214c9d54adbbde19672, type: 3}
+    - {fileID: 21300000, guid: dad0b332f11b7e84eb8105f2cf557b06, type: 3}
+    - {fileID: 21300000, guid: 7c0180626ce862e44b5de6e3a5c65263, type: 3}
+    - {fileID: 21300000, guid: dee3c3dfb2a3d5d45b9b8e0fa81cb993, type: 3}
+    - {fileID: 21300000, guid: c3582ee78cfbf4343aaf1ed6cbc3ab0b, type: 3}
+    - {fileID: 21300000, guid: 7e8cf632b9e04bc4db733757cada8aaf, type: 3}
+    - {fileID: 21300000, guid: ab795291e7491364383245ef245c408f, type: 3}
+    - {fileID: 21300000, guid: e7ca0102a0f649b499ad75915faece29, type: 3}
+    - {fileID: 21300000, guid: 322e55992639db242b30a5901c81e695, type: 3}
+    - {fileID: 21300000, guid: 0a9fb5053fb6e434c98c4e1290492da6, type: 3}
+  - type: 2
+    prefab: {fileID: -6618776134101572688, guid: 66945d4d52a732844a2d5c1a5836878c, type: 3}
+    lsSprite:
+    - {fileID: 21300000, guid: 4444aa1af15264b4185020bc54145d41, type: 3}
+    - {fileID: 21300000, guid: eec086be14c7f9c4d9b5dd7a09e499c1, type: 3}
+    - {fileID: 21300000, guid: 73b8d610f61178344b8f44fa18585bd0, type: 3}
+    - {fileID: 21300000, guid: 46b841b134b92bf4dbf3045039cf3aae, type: 3}
+    - {fileID: 21300000, guid: 075ddd0c9f639b349ac0f7bf80e1f970, type: 3}
+    - {fileID: 21300000, guid: 2f5854ea0e56f9f47afc99902112d7a3, type: 3}
+    - {fileID: 21300000, guid: 7fd6fcf484f82eb409f03809bb6a8d3c, type: 3}
+    - {fileID: 21300000, guid: ca9f2eee2959a1546ba2a5c0e086e89c, type: 3}
+    - {fileID: 21300000, guid: 0b5c002af108b034a8ee7a5705463e96, type: 3}
+    - {fileID: 21300000, guid: 5954c2f53e9e3494787513bfbabb9cfe, type: 3}
+    - {fileID: 21300000, guid: aa6be5a0fe6044f4ca1c41439b5539e5, type: 3}
+  - type: 3
+    prefab: {fileID: -7122599822707796684, guid: 8e529a2224e6dc24687eb6ebc208a72b, type: 3}
+    lsSprite:
+    - {fileID: 21300000, guid: 382c60fe76ddc2e40b0c0269ae95b48b, type: 3}
+    - {fileID: 21300000, guid: 61392d6cffdcac048bc4525731058596, type: 3}
+    - {fileID: 21300000, guid: e86e72998af3b244e9c85f5d27679e2c, type: 3}
+    - {fileID: 21300000, guid: 11c156a100186ac4d872ee5ebe78b46d, type: 3}
+  - type: 4
+    prefab: {fileID: -7122599822707796684, guid: 8e529a2224e6dc24687eb6ebc208a72b, type: 3}
+    lsSprite:
+    - {fileID: 21300000, guid: 382c60fe76ddc2e40b0c0269ae95b48b, type: 3}
+    - {fileID: 21300000, guid: 61392d6cffdcac048bc4525731058596, type: 3}
+    - {fileID: 21300000, guid: e86e72998af3b244e9c85f5d27679e2c, type: 3}
+    - {fileID: 21300000, guid: 11c156a100186ac4d872ee5ebe78b46d, type: 3}
+  - type: 5
+    prefab: {fileID: -7122599822707796684, guid: 8e529a2224e6dc24687eb6ebc208a72b, type: 3}
+    lsSprite:
+    - {fileID: 21300000, guid: 382c60fe76ddc2e40b0c0269ae95b48b, type: 3}
+    - {fileID: 21300000, guid: 61392d6cffdcac048bc4525731058596, type: 3}
+    - {fileID: 21300000, guid: e86e72998af3b244e9c85f5d27679e2c, type: 3}
+    - {fileID: 21300000, guid: 11c156a100186ac4d872ee5ebe78b46d, type: 3}
+  - type: 6
+    prefab: {fileID: -7122599822707796684, guid: 8e529a2224e6dc24687eb6ebc208a72b, type: 3}
+    lsSprite:
+    - {fileID: 21300000, guid: 382c60fe76ddc2e40b0c0269ae95b48b, type: 3}
+    - {fileID: 21300000, guid: 61392d6cffdcac048bc4525731058596, type: 3}
+    - {fileID: 21300000, guid: e86e72998af3b244e9c85f5d27679e2c, type: 3}
+    - {fileID: 21300000, guid: 11c156a100186ac4d872ee5ebe78b46d, type: 3}
+  - type: 7
+    prefab: {fileID: -3705476221959361384, guid: b5a2266acfbd7cd4dad03a6103b9832a, type: 3}
+    lsSprite:
+    - {fileID: 21300000, guid: e56fbfe953501c94e8990372d7dceec9, type: 3}
+  - type: 8
+    prefab: {fileID: 8256834727875070995, guid: dee4286e59648b84cb6bb023e9165306, type: 3}
+    lsSprite:
+    - {fileID: 21300000, guid: 5b7b4f91e1ccf42488e97166cc380b59, type: 3}
+  - type: 9
+    prefab: {fileID: 8256834727875070995, guid: dee4286e59648b84cb6bb023e9165306, type: 3}
+    lsSprite:
+    - {fileID: 21300000, guid: 84fbbbdc8a47c4d4685ea278a88ea430, type: 3}
+  - type: 10
+    prefab: {fileID: 8256834727875070995, guid: dee4286e59648b84cb6bb023e9165306, type: 3}
+    lsSprite:
+    - {fileID: 21300000, guid: 2e7b72cf42462ad47b3e87370b39a7cd, type: 3}
+  - type: 11
+    prefab: {fileID: -6292012947590596475, guid: 483520b9fbc9dfe4799290b399d5a3b7, type: 3}
+    lsSprite:
+    - {fileID: 21300000, guid: d6acf35fc5ba4974e9a7cbd5520823f6, type: 3}

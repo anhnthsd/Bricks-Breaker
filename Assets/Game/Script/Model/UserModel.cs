@@ -60,6 +60,12 @@ namespace Game.Script.Model
 
             Save();
         }
+
+        public void ClaimDiamond(int diamond)
+        {
+            userData.diamond += diamond;
+            Save();
+        }
     }
 }
 

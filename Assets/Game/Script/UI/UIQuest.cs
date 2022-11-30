@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using Game.Script.Data;
 using Game.Script.Model;
+using TMPro;
 using UnityEngine;
 
 namespace Game.Script.UI
@@ -18,17 +20,28 @@ namespace Game.Script.UI
         private List<MainMissionItem> lsMain;
         private List<DailyButtonItem> lsDaily;
 
+        [SerializeField] private TextMeshProUGUI txtDiamond;
+
         public override void Initialize()
         {
             SetDailyScroll();
             SetMainScroll();
         }
 
+        private void OnEnable()
+        {
+            GameManager.UpdateDiamond += UpdateView;
+        }
+
+        private void OnDisable()
+        {
+            GameManager.UpdateDiamond -= UpdateView;
+        }
+
         public override void Show()
         {
             gameObject.SetActive(true);
-            UpdateMainScroll();
-            UpdateDailyScroll();
+            UpdateView();
             ChooseDailyQ();
         }
 
@@ -58,7 +71,7 @@ namespace Game.Script.UI
 
         public void ClaimDailyMission(TypeMissionDaily typeMissionDaily)
         {
-            DailyMissionModel.Ins.Claim(typeMissionDaily);
+            GameManager.ClaimQDaily(typeMissionDaily);
         }
 
         public void SetMainScroll()
@@ -87,7 +100,14 @@ namespace Game.Script.UI
 
         public void ClaimMainMission(TypeMissionMain typeMissionMain)
         {
-            MainMissionModel.Ins.Claim(typeMissionMain);
+            GameManager.ClaimQMain(typeMissionMain);
+        }
+
+        private void UpdateView()
+        {
+            txtDiamond.text = UserModel.Ins.userData.diamond.ToString();
+            UpdateMainScroll();
+            UpdateDailyScroll();
         }
 
         public void ChooseDailyQ()

@@ -37,7 +37,7 @@ namespace Game.Script
         public void TakeItemBurst()
         {
             gameObject.SetActive(false);
-            BrickController.ins.DelBrick(i, j);
+            GameController.ins.DelBrick(i, j);
         }
 
         public override void TakeDamage()
@@ -66,7 +66,7 @@ namespace Game.Script
 
         public void AddBall(int count, Vector3 pos)
         {
-            BallController.ins.OnAddBall(count, pos);
+            GameController.ins.OnAddBall(count, pos);
             TakeItemBurst();
         }
     }

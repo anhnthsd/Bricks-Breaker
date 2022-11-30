@@ -782,8 +782,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   btnBallReturn: {fileID: 81200921}
   txtScore: {fileID: 1076748510}
-  UIModeClassic: {fileID: 757951218}
-  UIModeTower: {fileID: 818479390}
+  objGamePlay: {fileID: 1364778016}
+  uiModeClassic: {fileID: 757951218}
+  uiModeTower: {fileID: 818479390}
 --- !u!1 &156015085
 GameObject:
   m_ObjectHideFlags: 0
@@ -1346,7 +1347,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 862264935}
+  m_Father: {fileID: 904039069}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &267873007
@@ -1606,68 +1607,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 311314442}
   m_CullTransparentMesh: 1
---- !u!1 &315008248
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 315008249}
-  - component: {fileID: 315008250}
-  m_Layer: 0
-  m_Name: BricksController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &315008249
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 315008248}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1606742276}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &315008250
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 315008248}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2348e38c026240fd9434d4954021c74f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cam: {fileID: 519420031}
-  ballController: {fileID: 867971575}
-  listBricks:
-  - {fileID: -1468402543422352644, guid: 70957de9c61167c4fb74f5aa7e01dd4c, type: 3}
-  - {fileID: -6618776134101572688, guid: 66945d4d52a732844a2d5c1a5836878c, type: 3}
-  - {fileID: -7122599822707796684, guid: 8e529a2224e6dc24687eb6ebc208a72b, type: 3}
-  - {fileID: -3705476221959361384, guid: b5a2266acfbd7cd4dad03a6103b9832a, type: 3}
-  - {fileID: 8256834727875070995, guid: dee4286e59648b84cb6bb023e9165306, type: 3}
-  - {fileID: -6292012947590596475, guid: 483520b9fbc9dfe4799290b399d5a3b7, type: 3}
-  listBaseBricks: []
-  parentBrick: {fileID: 1805797469}
-  textPrefab: {fileID: 8850910237983638310, guid: 967de43ba9c3e4840a67864cfd8ba781, type: 3}
-  parentText: {fileID: 1615764720}
-  fxDamage: {fileID: 5343811173839887693, guid: 8092e8e4296a06e42976f755d3729af4, type: 3}
-  fxDamageVer: {fileID: 5343811173839887693, guid: bfb581d3ef3118741af6926fdf5b7cea, type: 3}
-  fxBurstHor: {fileID: 847128145465177892, guid: 1532e3f52b2117544894c514f9401666, type: 3}
-  fxBurstVer: {fileID: 847128145465177892, guid: 14373d40b1cb99b428888159787c3421, type: 3}
-  fxBurstSur: {fileID: 7845577645494000712, guid: 498d29ba51984da4b87b0347cc113beb, type: 3}
 --- !u!1 &339121920
 GameObject:
   m_ObjectHideFlags: 0
@@ -2551,6 +2490,11 @@ MonoBehaviour:
   btnClose: {fileID: 1323231882}
   btnQuest: {fileID: 798812866}
   btnContinue: {fileID: 448321455}
+  lsStar:
+  - {fileID: 1586760151}
+  - {fileID: 1371590522}
+  - {fileID: 270712720}
+  imgLightStar: {fileID: 21300000, guid: 96747c77ab9cba04b9fa5d252e48fa90, type: 3}
 --- !u!1 &474439659
 GameObject:
   m_ObjectHideFlags: 0
@@ -5111,7 +5055,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &862264935
 Transform:
   m_ObjectHideFlags: 0
@@ -5123,11 +5067,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1262549752}
-  - {fileID: 267873006}
+  m_Children: []
   m_Father: {fileID: 904039069}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &862264936
 MonoBehaviour:
@@ -5148,67 +5090,6 @@ MonoBehaviour:
   brickOnTurn: 0
   isSpecialTurn: 0
   sumBallSpecial: 9
---- !u!1 &867971573
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 867971574}
-  - component: {fileID: 867971575}
-  m_Layer: 0
-  m_Name: BallController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &867971574
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 867971573}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1606742276}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &867971575
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 867971573}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50ec4d7fe9b85f74d9633ed019399c65, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  btnBallReturn: {fileID: 81200919}
-  ball: {fileID: 7853519400686525314, guid: 4fd0aa3c9dc2647498d8be7fbdd9d7af, type: 3}
-  direcBall: {fileID: 5043345285047913319, guid: 93b9dcc864bae6742996db47e1ddcb67, type: 3}
-  addBall: {fileID: 8192690807690108345, guid: 6ea5ddcd500032f4e908a26317b9d315, type: 3}
-  listDotBall: []
-  parentBall: {fileID: 1066162267}
-  parentDotBall: {fileID: 1860845959}
-  lsBalls: []
-  parentTxtBall: {fileID: 1306270397}
-  textPrefab: {fileID: 8850910237983638310, guid: 967de43ba9c3e4840a67864cfd8ba781, type: 3}
-  textSumBall: {fileID: 0}
-  wallMask:
-    serializedVersion: 2
-    m_Bits: 128
-  ballFirstFall: {fileID: 0}
-  sumAddBall: 0
-  fxSpecialBall: {fileID: 5471838519779563488, guid: 09243099090d38a44a1d350829b5f6fc, type: 3}
 --- !u!1 &904039068
 GameObject:
   m_ObjectHideFlags: 0
@@ -5238,6 +5119,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1262549752}
+  - {fileID: 267873006}
   - {fileID: 862264935}
   - {fileID: 1606742276}
   - {fileID: 1364778017}
@@ -5263,7 +5146,10 @@ MonoBehaviour:
   - {fileID: 862264936}
   isEndGame: 0
   goPlay: {fileID: 1364778016}
+  parentText: {fileID: 1615764720}
+  parentBrick: {fileID: 1805797469}
   gameState: 0
+  textPrefab: {fileID: 8850910237983638310, guid: 967de43ba9c3e4840a67864cfd8ba781, type: 3}
 --- !u!1 &934300801
 GameObject:
   m_ObjectHideFlags: 0
@@ -5276,12 +5162,12 @@ GameObject:
   - component: {fileID: 934300804}
   - component: {fileID: 934300803}
   m_Layer: 5
-  m_Name: TxtSumScore
+  m_Name: TxtSumScoreClassic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &934300802
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6410,7 +6296,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 862264935}
+  m_Father: {fileID: 904039069}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1262549753
@@ -6425,19 +6311,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2348e38c026240fd9434d4954021c74f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 519420031}
   ballController: {fileID: 267873007}
-  listBricks:
-  - {fileID: -1468402543422352644, guid: 70957de9c61167c4fb74f5aa7e01dd4c, type: 3}
-  - {fileID: -6618776134101572688, guid: 66945d4d52a732844a2d5c1a5836878c, type: 3}
-  - {fileID: -7122599822707796684, guid: 8e529a2224e6dc24687eb6ebc208a72b, type: 3}
-  - {fileID: -3705476221959361384, guid: b5a2266acfbd7cd4dad03a6103b9832a, type: 3}
-  - {fileID: 8256834727875070995, guid: dee4286e59648b84cb6bb023e9165306, type: 3}
-  - {fileID: -6292012947590596475, guid: 483520b9fbc9dfe4799290b399d5a3b7, type: 3}
-  listBaseBricks: []
   parentBrick: {fileID: 1805797469}
-  textPrefab: {fileID: 8850910237983638310, guid: 967de43ba9c3e4840a67864cfd8ba781, type: 3}
-  parentText: {fileID: 1615764720}
   fxDamage: {fileID: 5343811173839887693, guid: 8092e8e4296a06e42976f755d3729af4, type: 3}
   fxDamageVer: {fileID: 5343811173839887693, guid: bfb581d3ef3118741af6926fdf5b7cea, type: 3}
   fxBurstHor: {fileID: 847128145465177892, guid: 1532e3f52b2117544894c514f9401666, type: 3}
@@ -7084,7 +6959,7 @@ Transform:
   - {fileID: 1860845959}
   - {fileID: 1066162267}
   m_Father: {fileID: 904039069}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1371590520
 GameObject:
@@ -8188,7 +8063,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1606742276
 Transform:
   m_ObjectHideFlags: 0
@@ -8200,11 +8075,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 315008249}
-  - {fileID: 867971574}
+  m_Children: []
   m_Father: {fileID: 904039069}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1606742277
 MonoBehaviour:
@@ -8220,8 +8093,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentRow: 0
   startBall: 1
-  ballController: {fileID: 867971575}
-  brickController: {fileID: 315008250}
+  ballController: {fileID: 267873007}
+  brickController: {fileID: 1262549753}
   isSpecialTurn: 0
   sumBallSpecial: 9
 --- !u!1 &1615764719
@@ -8770,7 +8643,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1665479095
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8814,6 +8687,8 @@ MonoBehaviour:
   btnClose: {fileID: 1290787076}
   btnQuest: {fileID: 109125344}
   btnRetry: {fileID: 1824597071}
+  UIModeClassic: {fileID: 934300801}
+  UIModeTower: {fileID: 1096972644}
 --- !u!1 &1679601756
 GameObject:
   m_ObjectHideFlags: 0
@@ -8873,7 +8748,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: e3265ab4bf004d28a9537516768c1c75, type: 3}
+    m_Font: {fileID: 12800000, guid: afd534f87642eb140a00f79e445248a4, type: 3}
     m_FontSize: 100
     m_FontStyle: 1
     m_BestFit: 0
@@ -8885,7 +8760,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Result
+  m_Text: "Th\xE0nh c\xF4ng"
 --- !u!222 &1679601759
 CanvasRenderer:
   m_ObjectHideFlags: 0

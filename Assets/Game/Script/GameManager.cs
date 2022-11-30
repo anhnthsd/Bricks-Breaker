@@ -12,6 +12,8 @@ namespace Game.Script
         private static DailyMissionModel _dailyMissionModel;
         private static LevelTowerModel _levelTowerModel;
 
+        public static event Action UpdateDiamond;
+
         private void Awake()
         {
             UserModel.Ins.Init();
@@ -49,6 +51,18 @@ namespace Game.Script
         public static void GetStarTower(int star)
         {
             _mainMissionModel.ReportMission(TypeMissionMain.StarTower, star);
+        }
+
+        public static void ClaimQMain(TypeMissionMain type)
+        {
+            UserModel.Ins.ClaimDiamond(MainMissionModel.Ins.Claim(type));
+            UpdateDiamond?.Invoke();
+        }
+
+        public static void ClaimQDaily(TypeMissionDaily type)
+        {
+            UserModel.Ins.ClaimDiamond(DailyMissionModel.Ins.Claim(type));
+            UpdateDiamond?.Invoke();
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Game.Script.Model
                 levelInfos = new List<LevelInfo>();
                 for (int i = 0; i < 60; i++)
                 {
-                    levelInfos.Add(new LevelInfo(i + 1, 0));
+                    levelInfos.Add(new LevelInfo(i + 1, 0, 5000));
                 }
 
                 Save();
@@ -43,8 +43,11 @@ namespace Game.Script.Model
 
         public void Victory(int level, int star)
         {
-            levelInfos[level - 1].star = star;
-            Save();
+            if (star > levelInfos[level - 1].star)
+            {
+                levelInfos[level - 1].star = star;
+                Save();
+            }
         }
 
         private void Save()
@@ -65,10 +68,12 @@ public class LevelInfo
 {
     public int level;
     public int star;
+    public int scoreStar;
 
-    public LevelInfo(int level, int star)
+    public LevelInfo(int level, int star, int scoreStar)
     {
         this.level = level;
         this.star = star;
+        this.scoreStar = scoreStar;
     }
 }

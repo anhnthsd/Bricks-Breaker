@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using DG.Tweening;
+using Game.Script.Model;
 using Game.Script.UI;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -13,8 +14,8 @@ namespace Game.Script.ModePlay
         [SerializeField] private bool isSpecialTurn = false;
         [SerializeField] private int sumBallSpecial = 9;
 
-        public Action<int> eventUpdateScoreTower;
-        private int levelCurrent;
+        private int _levelCurrent = 1;
+        private int _star = 0;
 
         private int[,] _lsMap;
         private int[,] _lsNumber;
@@ -22,7 +23,7 @@ namespace Game.Script.ModePlay
         public override void StartGame(int level)
         {
             ReadFile(level);
-            levelCurrent = level;
+            _levelCurrent = level;
             currentRow = 4;
             ballController.Play(startBall);
             brickController.CreateBrickWithMap(_lsMap, _lsNumber, currentRow);
@@ -43,6 +44,7 @@ namespace Game.Script.ModePlay
         public override void AfterTurn()
         {
             brickOnTurn = 0;
+
             if (isSpecialTurn)
             {
                 ballController.AfterSpecialTurn(sumBallSpecial);
@@ -55,18 +57,18 @@ namespace Game.Script.ModePlay
 
             if (brickController.IsClearMap())
             {
-                Debug.Log("Victory");
                 GameController.ins.gameState = GamePlayState.Victory;
                 PopupManager.Show<UIVictory>();
-                GameManager.Victory(levelCurrent, 3);
+                GameManager.Victory(_levelCurrent, _star);
+                GameController.ins.EventUpdateScore?.Invoke(Score, _star);
             }
 
-            if (brickController.IsSpecialTurn())
-            {
-                GameController.ins.SpecialTurn();
-                isSpecialTurn = true;
-                SpecialTurn(2);
-            }
+            // if (brickController.IsSpecialTurn())
+            // {
+            //     GameController.ins.SpecialTurn();
+            //     isSpecialTurn = true;
+            //     SpecialTurn(2);
+            // }
         }
 
         public override void SpecialTurn(int rows = 1)
@@ -81,18 +83,37 @@ namespace Game.Script.ModePlay
 
         public override void EndGame()
         {
-            Debug.Log("ENDGAME");
         }
 
         public override void EndMap()
         {
         }
 
-        public override void IncreaseScore()
+        public override void IncreaseScore(Action<int, int> updateScore)
         {
             brickOnTurn++;
             Score += 10 * brickOnTurn;
-            eventUpdateScoreTower?.Invoke(Score);
+
+            var maxScore = LevelTowerModel.Ins.levelInfos[_levelCurrent].scoreStar;
+            if (Score > maxScore)
+            {
+                _star = 3;
+            }
+            else if (Score > maxScore * 0.7)
+            {
+                _star = 2;
+            }
+            else if (Score > 10)
+            {
+                _star = 1;
+            }
+
+            updateScore?.Invoke(Score, _star);
+        }
+
+        public override void OnRestart()
+        {
+            Score = 0;
         }
 
         public override void Btn()

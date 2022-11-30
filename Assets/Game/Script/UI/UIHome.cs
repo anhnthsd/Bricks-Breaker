@@ -19,7 +19,7 @@ namespace Game.Script.UI
 
         public override void Initialize()
         {
-            btnQuest.onClick.AddListener((() => PopupManager.Show<UIQuest>()));
+            btnQuest.onClick.AddListener((() => PopupManager.Show<UIQuest>(false)));
             btnModeClassic.onClick.AddListener(() => PlayGame(GameMode.Classic));
             btnModeTower.onClick.AddListener(() => PlayGame(GameMode.Tower));
             SetScroll();
@@ -33,8 +33,8 @@ namespace Game.Script.UI
 
         private void PlayGame(GameMode gameMode, int level = 0)
         {
+            UIManager.Show<UIGamePlay>(false);
             GameController.ins.PlayGame(gameMode, level);
-            UIManager.Show<UIGamePlay>();
         }
 
         private void SetScroll()
