@@ -21,12 +21,13 @@ namespace Game.Script
         public Transform parentText;
         public GamePlayState gameState;
         public TextMeshProUGUI textPrefab;
-        public event Action<GameMode> OnPlayGame;
-        public Action<int, int> EventUpdateScore;
-        public Action<bool> SetVisibleBtnBallReturn;
 
         public int levelPlay = 0;
         public GameMode currentGameMode;
+        public event Action<GameMode> OnPlayGame;
+        public Action<int, int> EventUpdateScore;
+        public Action<bool> SetVisibleBtnBallReturn;
+        public Action UpdateBestScore;
 
         private void Awake()
         {
@@ -42,32 +43,25 @@ namespace Game.Script
         {
             gameState = GamePlayState.Playing;
             currentGameMode = gameMode;
+            levelPlay = level;
             goPlay.SetActive(true);
-            currentMode = modePlays[(int)gameMode];
+            currentMode = modePlays[(int)currentGameMode];
             currentMode.gameObject.SetActive(true);
             currentMode.StartGame(level);
-            OnPlayGame?.Invoke(gameMode);
-            levelPlay = level;
+            OnPlayGame?.Invoke(currentGameMode);
         }
 
         public void Retry()
         {
             OnRestart();
             gameState = GamePlayState.Playing;
-            goPlay.SetActive(true);
             currentMode = modePlays[(int)currentGameMode];
-            currentMode.gameObject.SetActive(true);
-            currentMode.StartGame(levelPlay);
-            OnPlayGame?.Invoke(currentGameMode);
+            currentMode.Retry();
         }
 
         public void ActiveBallReturn(bool isActive)
         {
             SetVisibleBtnBallReturn?.Invoke(isActive);
-        }
-
-        public void NextLevel(int level)
-        {
         }
 
         public void AfterTurn()
@@ -88,7 +82,6 @@ namespace Game.Script
             currentMode.EndGame();
             isEndGame = true;
             gameState = GamePlayState.Lose;
-            PopupManager.Show<UILose>(false);
         }
 
         public void EndMap()
@@ -122,17 +115,17 @@ namespace Game.Script
 
         public void OnRestart()
         {
-            currentMode.ballController.OnRestart();
-            currentMode.brickController.OnRestart();
             currentMode.OnRestart();
 
             gameState = GamePlayState.Playing;
+            isEndGame = false;
             EventUpdateScore?.Invoke(GetScore(), 0);
+            ActiveBallReturn(false);
         }
 
-        public void DelBrick(int i, int j)
+        public void DelBrick(int i, int j, bool isGetScore = true)
         {
-            currentMode.brickController.DelBrick(i, j);
+            currentMode.brickController.DelBrick(i, j, isGetScore);
         }
 
         public void OnDamage(Vector3 transformPosition, TypeOfBrick typeOfBrick, int i, int j)
@@ -167,6 +160,7 @@ public enum GamePlayState
     Start,
     Stop,
     Playing,
+    AfterTurn,
     Victory,
     Lose,
     Done

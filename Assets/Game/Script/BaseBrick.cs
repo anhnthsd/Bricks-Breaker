@@ -59,12 +59,13 @@ namespace Game.Script
                 GameController.ins.DelBrick(i, j);
             }
         }
+
         public virtual void Remove()
         {
             if (gameObject.activeInHierarchy)
             {
                 gameObject.SetActive(false);
-                GameController.ins.DelBrick(i, j);
+                GameController.ins.DelBrick(i, j, false);
             }
         }
     }

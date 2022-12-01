@@ -39,9 +39,10 @@ namespace Game.Script.Model
                 {
                     missionInfos.Add(DailyMissionInfo.InitNew(data.lsMissionDaily[i]));
                 }
+
                 Save();
             }
-            
+
             // Load();
             // for (int i = 0; i < missionInfos.Count; i++)
             // {
@@ -52,6 +53,18 @@ namespace Game.Script.Model
             // }
             //
             // Save();
+        }
+
+        public void ResetMission()
+        {
+            var data = Resources.Load<DailyMissionData>("DailyMission");
+            missionInfos = new List<DailyMissionInfo>();
+            for (int i = 0; i < data.lsMissionDaily.Count; i++)
+            {
+                missionInfos.Add(DailyMissionInfo.InitNew(data.lsMissionDaily[i]));
+            }
+
+            Save();
         }
 
         public void ReportMission(TypeMissionDaily typeMissionDaily, int progress = 1)
@@ -66,6 +79,10 @@ namespace Game.Script.Model
                     {
                         missionInfos[i].isComplete = true;
                         missionInfos[i].canClaim = true;
+                        if (typeMissionDaily != TypeMissionDaily.DoneMissionDaily)
+                        {
+                            ReportMission(TypeMissionDaily.DoneMissionDaily);
+                        }
                     }
                 }
             }

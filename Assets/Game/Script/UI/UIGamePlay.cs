@@ -11,6 +11,7 @@ namespace Game.Script.UI
     {
         [SerializeField] private Button btnBallReturn;
         [SerializeField] private TextMeshProUGUI txtScore;
+        [SerializeField] private TextMeshProUGUI txtLevelTower;
         [SerializeField] private TextMeshProUGUI txtBestScore;
 
         [SerializeField] private GameObject objGamePlay;
@@ -30,6 +31,7 @@ namespace Game.Script.UI
             GameController.ins.OnPlayGame += SetTopMode;
             GameController.ins.EventUpdateScore += UpdateScore;
             GameController.ins.SetVisibleBtnBallReturn += UpdateBtnBallReturn;
+            GameController.ins.UpdateBestScore += UpdateBestScore;
             objGamePlay.SetActive(true);
             GameController.ins.OnRestart();
         }
@@ -39,6 +41,7 @@ namespace Game.Script.UI
             GameController.ins.OnPlayGame -= SetTopMode;
             GameController.ins.EventUpdateScore -= UpdateScore;
             GameController.ins.SetVisibleBtnBallReturn -= UpdateBtnBallReturn;
+            GameController.ins.UpdateBestScore -= UpdateBestScore;
             objGamePlay.SetActive(false);
         }
 
@@ -47,16 +50,16 @@ namespace Game.Script.UI
             btnBallReturn.onClick.AddListener((() => GameController.ins.BallReturn()));
         }
 
-        public override void Show()
-        {
-            base.Show();
-            Debug.Log(GameController.ins.currentMode);
-        }
-
         private void SetTopMode(GameMode mode)
         {
             uiModeClassic.SetActive(mode == GameMode.Classic);
             uiModeTower.SetActive(mode == GameMode.Tower);
+            txtLevelTower.text = "Bậc - " + GameController.ins.levelPlay;
+        }
+
+        private void UpdateBestScore()
+        {
+            txtBestScore.text = UserModel.Ins.userData.bestScoreClassic.ToString();
         }
 
         private void UpdateStar(int star)
@@ -81,6 +84,7 @@ namespace Game.Script.UI
             txtScore.text = "Score: " + score;
             UpdateStar(star);
             float percent = (float)score / LevelTowerModel.Ins.levelInfos[GameController.ins.levelPlay].scoreStar;
+            txtLevelTower.text = "Bậc - " + GameController.ins.levelPlay;
             imgStarProgress.fillAmount = percent;
         }
 

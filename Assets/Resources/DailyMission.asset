@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lsMissionDaily:
   - name: "Ho\xE0n th\xE0nh nhi\u1EC7m v\u1EE5 h\xE0ng ng\xE0y"
-    requirement: 5
+    requirement: 4
     amountDiamond: 50
     type: 0
   - name: "B\u01B0\u1EDBc v\xE0o s\xE2n kh\u1EA5u"

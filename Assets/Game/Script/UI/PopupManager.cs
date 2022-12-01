@@ -39,11 +39,11 @@ namespace Game.Script.UI
             return null;
         }
 
-        public static void Show<T>(bool remember = true) where T : View
+        public static T Show<T>(bool remember = true) where T : View
         {
             for (int i = 0; i < ins.popViews.Length; i++)
             {
-                if (ins.popViews[i] is T)
+                if (ins.popViews[i] is T tView)
                 {
                     if (ins._currentPopup != null && ins._currentPopup != ins.popViews[i])
                     {
@@ -57,8 +57,11 @@ namespace Game.Script.UI
 
                     ins.popViews[i].Show();
                     ins._currentPopup = ins.popViews[i];
+                    return tView;
                 }
             }
+
+            return null;
         }
 
         public static void Show(View view, bool remenber = true)

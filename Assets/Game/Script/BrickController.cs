@@ -48,19 +48,15 @@ namespace Game.Script
 
         public void AddNewMap(int[,] lsMap, int[,] lsNumber)
         {
-            _lsMap = lsMap;
-            _lsNumber = lsNumber;
-            Debug.Log("AddNewMap");
+            // _lsMap = lsMap;
+            // _lsNumber = lsNumber;
+            //
+            // Debug.Log("AddNewMap");
         }
 
         public void CreateNewBrick(int i, int j, TypeOfBrick brickType, int number)
         {
             if (brickType == TypeOfBrick.Empty) return;
-            // var prefab = Resources.Load<DataBrick>("DataBrick").brickInfo
-            //     .Find(s => s.type == brickType)
-            //     .prefab;
-            // BaseBrick brickNew = Instantiate(prefab);
-            // brickNew.GetComponent<BaseBrick>().SetSprite(brickType);
             BaseBrick brickNew = BrickPooler.BrickInstance.GetObject(brickType);
 
             if (brickNew)
@@ -78,9 +74,9 @@ namespace Game.Script
             }
         }
 
-        public void DelBrick(int i, int j)
+        public void DelBrick(int i, int j, bool isGetScore)
         {
-            if (lsBrick[i, j].CanDieOnBottom())
+            if (lsBrick[i, j].CanDieOnBottom() && isGetScore)
             {
                 GameController.ins.IncreaseScore();
             }
@@ -97,13 +93,14 @@ namespace Game.Script
             var newPosition = new Vector3(parentBrick.position.x, y, 0);
             parentBrick.transform.DOMove(newPosition, 0.2f);
 
+            var bottomRow = lsBrick.GetLength(0) - 1 - _currentRow + MAX_ROW - 1;
             for (int i = 0; i < lsBrick.GetLength(0); i++)
             {
                 for (int j = 0; j < lsBrick.GetLength(1); j++)
                 {
                     if (lsBrick[i, j])
                     {
-                        if ((lsBrick.GetLength(0) - 1 - _currentRow + MAX_ROW - 1) == i)
+                        if (bottomRow == i)
                         {
                             if (lsBrick[i, j].CanDieOnBottom())
                             {
@@ -138,11 +135,6 @@ namespace Game.Script
 
             for (int j = 0; j < lsBrick.GetLength(1); j++)
             {
-                // if (lsBrick[lsBrick.GetLength(0) - 1 - _currentRow, j])
-                // {
-                //     lsBrick[lsBrick.GetLength(0) - 1 - _currentRow, j].Active(true);
-                // }
-
                 var brickType = (TypeOfBrick)_lsMap[lsBrick.GetLength(0) - 1 - _currentRow, j];
                 var number = _lsNumber[lsBrick.GetLength(0) - 1 - _currentRow, j];
                 CreateNewBrick(lsBrick.GetLength(0) - 1 - _currentRow, j, brickType, number);
@@ -153,8 +145,11 @@ namespace Game.Script
 
         public bool IsSpecialTurn()
         {
-            if (_lsMap.GetLength(0) - _currentRow <= 3) return false;
-            for (int i = lsBrick.GetLength(0) - 1; i > _currentRow + 3; i--)
+            if (_lsMap.GetLength(0) - _currentRow < 1) return false;
+
+            var rowCheck = lsBrick.GetLength(0) - 1 - _currentRow + MAX_ROW - 5;
+
+            for (int i = rowCheck; i < lsBrick.GetLength(0); i++)
             {
                 for (int j = 0; j < lsBrick.GetLength(1); j++)
                 {

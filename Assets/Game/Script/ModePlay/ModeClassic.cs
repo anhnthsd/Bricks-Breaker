@@ -1,6 +1,9 @@
 using System;
+using System.IO;
 using Game.Script.Data;
 using Game.Script.Model;
+using Game.Script.UI;
+using Newtonsoft.Json;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -14,44 +17,44 @@ namespace Game.Script.ModePlay
 
         private int lvl = 1;
 
-        private int[,] _lsMap = new int[,]
-        {
-            { 1, 1, 1, 1, 1, 1, 7 },
-            { 0, 1, 7, 1, 1, 1, 1 },
-            { 0, 1, 1, 1, 7, 1, 1 },
-            { 0, 1, 1, 1, 1, 0, 7 },
-            { 1, 1, 1, 7, 1, 1, 7 },
-            { 0, 1, 1, 0, 1, 1, 1 },
-            { 0, 1, 7, 1, 1, 0, 1 },
-            { 1, 7, 1, 1, 1, 1, 7 },
-            { 0, 1, 1, 1, 1, 1, 1 },
-            { 0, 1, 1, 1, 7, 1, 1 },
-        };
+        private int[,] _lsMap;
 
-        private int[,] _lsNumber = new int[,]
-        {
-            { 8, 1, 6, 1, 1, 10, 1 },
-            { 0, 10, 1, 1, 2, 8, 1 },
-            { 9, 2, 1, 3, 1, 9, 2 },
-            { 0, 1, 7, 1, 2, 3, 3 },
-            { 4, 6, 3, 1, 1, 1, 1 },
-            { 0, 5, 1, 1, 1, 5, 1 },
-            { 0, 1, 1, 1, 3, 4, 2 },
-            { 1, 1, 2, 1, 1, 1, 1 },
-            { 3, 1, 3, 1, 1, 1, 2 },
-            { 1, 1, 1, 1, 1, 1, 1 },
-        };
+        private int[,] _lsNumber;
 
         public override void StartGame(int level)
         {
+            ReadFile(Random.Range(0, 5));
+            GameController.ins.UpdateBestScore?.Invoke();
             currentRow = 1;
             ballController.Play(startBall);
             brickController.CreateBrickWithMap(_lsMap, _lsNumber, currentRow);
             GameManager.PlayClassic();
         }
 
+        public override void Retry()
+        {
+            ReadFile(Random.Range(0, 5));
+            GameController.ins.UpdateBestScore?.Invoke();
+            currentRow = 1;
+            ballController.Play(startBall);
+            brickController.CreateBrickWithMap(_lsMap, _lsNumber, currentRow);
+        }
+
+        private void ReadFile(int level)
+        {
+            string path = "Assets/Resources/classic_level" + level + ".txt";
+            StreamReader reader = new StreamReader(path);
+            var str = reader.ReadLine();
+            if (str != null) _lsMap = JsonConvert.DeserializeObject<int[,]>(str);
+            str = reader.ReadLine();
+            if (str != null) _lsNumber = JsonConvert.DeserializeObject<int[,]>(str);
+            reader.Close();
+        }
+
         public override void AfterTurn()
         {
+            Score++;
+
             if (isSpecialTurn)
             {
                 ballController.AfterSpecialTurn(sumBallSpecial);
@@ -61,6 +64,7 @@ namespace Game.Script.ModePlay
             ballController.AfterTurn();
 
             brickController.AfterTurn();
+
             GameController.ins.IncreaseScore();
         }
 
@@ -70,7 +74,8 @@ namespace Game.Script.ModePlay
 
         public override void EndGame()
         {
-            Debug.Log("ENDGAME");
+            PopupManager.Show<UILose>(false).SetClassicView(Score);
+            GameManager.SaveScoreClassic(Score);
         }
 
         public override void EndMap()
@@ -80,15 +85,16 @@ namespace Game.Script.ModePlay
             brickController.AddNewMap(_lsMap, _lsNumber);
         }
 
-        public override void IncreaseScore(Action<int,int> updateScore)
+        public override void IncreaseScore(Action<int, int> updateScore)
         {
-            Score++;
-            updateScore?.Invoke(Score,0);
+            updateScore?.Invoke(Score, 0);
         }
 
         public override void OnRestart()
         {
             Score = 0;
+            ballController.OnRestart();
+            brickController.OnRestart();
         }
 
         public override void Btn()

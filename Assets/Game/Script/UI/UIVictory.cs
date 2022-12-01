@@ -1,7 +1,5 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
-using Game.Script.Model;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,7 +15,7 @@ namespace Game.Script.UI
         [SerializeField] private Sprite imgLightStar;
         [SerializeField] private GameObject fxStar;
 
-        [SerializeField] private TextMeshProUGUI txtLevel;
+        [SerializeField] private Text txtLevel;
 
         public override void Initialize()
         {
@@ -26,39 +24,35 @@ namespace Game.Script.UI
             btnContinue.onClick.AddListener((MoveToNextLevel));
         }
 
-        private void OnEnable()
+        public void UpdateView(int star)
         {
-            GameController.ins.EventUpdateScore += UpdateView;
-        }
-
-        private void OnDisable()
-        {
-            GameController.ins.EventUpdateScore -= UpdateView;
-        }
-
-        private void UpdateView(int score, int star)
-        {
-            Debug.Log("Update view Victory");
             txtLevel.text = "Bậc - " + GameController.ins.levelPlay;
             SetStar(star);
+            GameManager.GetStarTower(star);
         }
 
-        public void SetStar(int star)
+        private void SetStar(int star)
         {
             for (int i = 0; i < star; i++)
             {
-                var fx = Instantiate(fxStar);
-                fx.transform.position = lsStar[i].transform.position;
-                Destroy(fx, 1);
-                lsStar[i].sprite = imgLightStar;
+                StartCoroutine(ShowStar(i, 0.3f * i + 0.5f));
             }
+        }
+
+        IEnumerator ShowStar(int i, float time)
+        {
+            yield return new WaitForSeconds(time);
+            var fx = Instantiate(fxStar);
+            fx.transform.position = lsStar[i].transform.position;
+            Destroy(fx, 1);
+            lsStar[i].sprite = imgLightStar;
         }
 
         private void MoveToNextLevel()
         {
+            Hide();
             GameController.ins.OnRestart();
             GameController.ins.PlayGame(GameMode.Tower, GameController.ins.levelPlay + 1);
-            Hide();
         }
 
         private void Close()

@@ -60,6 +60,15 @@ namespace Game.Script.Model
 
             Save();
         }
+        public void NewBestScore(int score)
+        {
+            if (score > userData.bestScoreClassic)
+            {
+                userData.bestScoreClassic = score;
+            }
+
+            Save();
+        }
 
         public void ClaimDiamond(int diamond)
         {

@@ -60,8 +60,8 @@ namespace Game.Script
             if (ballS.state == StateBall.Fly)
             {
                 ballS.rigi.velocity = Vector2.zero;
-                Vector2 f = new Vector2(Random.Range(0.5f, 1), Random.Range(0.5f, 1)) * 450;
-                ballS.rigi.AddForce(f);
+                Vector2 f = Random.insideUnitCircle;
+                ballS.rigi.AddForce(f.normalized * 500);
             }
         }
     }

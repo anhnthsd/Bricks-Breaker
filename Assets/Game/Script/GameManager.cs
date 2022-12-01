@@ -28,6 +28,41 @@ namespace Game.Script
             _mainMissionModel = MainMissionModel.Ins;
             _dailyMissionModel = DailyMissionModel.Ins;
             _levelTowerModel = LevelTowerModel.Ins;
+            CheckTime();
+        }
+
+        [ContextMenu("Save")]
+        private void SaveTime()
+        {
+            var t = MyUtils.DateTimeToTimeStamp(DateTime.Now);
+            PlayerPrefs.SetString("timeLogin", t.ToString());
+        }
+
+        [ContextMenu("GetTime")]
+        private void GetTime()
+        {
+            var t = long.Parse(PlayerPrefs.GetString("timeLogin"));
+            Debug.Log(MyUtils.UnixTimeStampToDateTime(t));
+        }
+
+        [ContextMenu("Check")]
+        private void CheckTime()
+        {
+            if (PlayerPrefs.HasKey("timeLogin"))
+            {
+                var t = long.Parse(PlayerPrefs.GetString("timeLogin"));
+                var timeLast = MyUtils.UnixTimeStampToDateTime(t);
+
+                var timeNow = DateTime.Now;
+                Debug.Log(timeNow.Day - timeLast.Day);
+
+                if (timeNow.Day - timeLast.Day > 0)
+                {
+                    _dailyMissionModel.ResetMission();
+                }
+            }
+
+            SaveTime();
         }
 
         public static void Victory(int level, int star)
@@ -55,14 +90,19 @@ namespace Game.Script
 
         public static void ClaimQMain(TypeMissionMain type)
         {
-            UserModel.Ins.ClaimDiamond(MainMissionModel.Ins.Claim(type));
+            _userModel.ClaimDiamond(MainMissionModel.Ins.Claim(type));
             UpdateDiamond?.Invoke();
         }
 
         public static void ClaimQDaily(TypeMissionDaily type)
         {
-            UserModel.Ins.ClaimDiamond(DailyMissionModel.Ins.Claim(type));
+            _userModel.ClaimDiamond(DailyMissionModel.Ins.Claim(type));
             UpdateDiamond?.Invoke();
+        }
+
+        public static void SaveScoreClassic(int score)
+        {
+            _userModel.NewBestScore(score);
         }
     }
 }

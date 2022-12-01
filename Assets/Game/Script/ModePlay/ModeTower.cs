@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using DG.Tweening;
 using Game.Script.Model;
@@ -30,6 +32,13 @@ namespace Game.Script.ModePlay
             GameManager.PlayTower();
         }
 
+        public override void Retry()
+        {
+            currentRow = 4;
+            ballController.Play(startBall);
+            brickController.CreateBrickWithMap(_lsMap, _lsNumber, currentRow);
+        }
+
         private void ReadFile(int level)
         {
             string path = "Assets/Resources/level" + level % 10 + ".txt";
@@ -58,31 +67,40 @@ namespace Game.Script.ModePlay
             if (brickController.IsClearMap())
             {
                 GameController.ins.gameState = GamePlayState.Victory;
-                PopupManager.Show<UIVictory>();
+                PopupManager.Show<UIVictory>(false).UpdateView(_star);
                 GameManager.Victory(_levelCurrent, _star);
-                GameController.ins.EventUpdateScore?.Invoke(Score, _star);
+                // GameController.ins.EventUpdateScore?.Invoke(Score, _star);
             }
 
-            // if (brickController.IsSpecialTurn())
-            // {
-            //     GameController.ins.SpecialTurn();
-            //     isSpecialTurn = true;
-            //     SpecialTurn(2);
-            // }
+            if (brickController.IsSpecialTurn())
+            {
+                GameController.ins.SpecialTurn();
+                isSpecialTurn = true;
+                SpecialTurn(3);
+            }
         }
 
         public override void SpecialTurn(int rows = 1)
         {
             for (int r = 0; r < rows; r++)
             {
-                DOVirtual.DelayedCall(0.3f, () => { brickController.AfterTurn(); });
+                StartCoroutine(CreateBrickSpecialTurn(0.3f * (r + 1)));
             }
 
             ballController.SpecialTurn(sumBallSpecial);
+
+            // GameController.ins.gameState = GamePlayState.Playing;
+        }
+
+        IEnumerator CreateBrickSpecialTurn(float time)
+        {
+            yield return new WaitForSeconds(time);
+            brickController.AfterTurn();
         }
 
         public override void EndGame()
         {
+            PopupManager.Show<UILose>(false).SetTowerView(_levelCurrent);
         }
 
         public override void EndMap()
@@ -114,6 +132,8 @@ namespace Game.Script.ModePlay
         public override void OnRestart()
         {
             Score = 0;
+            ballController.OnRestart();
+            brickController.OnRestart();
         }
 
         public override void Btn()

@@ -19,16 +19,16 @@ namespace Game.Script
         void Start()
         {
             pooledObjects = new List<BaseBrick>();
-            for (int i = 0; i < amountToPool; i++)
-            {
-                var prefab = Resources.Load<DataBrick>("DataBrick").brickInfo
-                    .Find(s => s.type == TypeOfBrick.Normal)
-                    .prefab;
-                BaseBrick brickNew = Instantiate(prefab);
-                brickNew.GetComponent<BaseBrick>().SetSprite(TypeOfBrick.Normal);
-                brickNew.gameObject.SetActive(false);
-                pooledObjects.Add(brickNew);
-            }
+            // for (int i = 0; i < amountToPool; i++)
+            // {
+            //     var prefab = Resources.Load<DataBrick>("DataBrick").brickInfo
+            //         .Find(s => s.type == TypeOfBrick.Normal)
+            //         .prefab;
+            //     BaseBrick brickNew = Instantiate(prefab);
+            //     brickNew.GetComponent<BaseBrick>().SetSprite(TypeOfBrick.Normal);
+            //     brickNew.gameObject.SetActive(false);
+            //     pooledObjects.Add(brickNew);
+            // }
         }
 
         public BaseBrick GetObject(TypeOfBrick brickType)
@@ -52,10 +52,8 @@ namespace Game.Script
                 pooledObjects.Add(brickNew);
                 return brickNew;
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
 
         public void UpdatePosition()

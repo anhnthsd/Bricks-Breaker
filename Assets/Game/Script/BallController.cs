@@ -45,7 +45,6 @@ namespace Game.Script
         {
             if (EventSystem.current.currentSelectedGameObject || GameController.ins.gameState != GamePlayState.Playing)
             {
-                Debug.Log("GameController.ins.gameState:" + GameController.ins.gameState);
                 return;
             }
 
@@ -61,7 +60,7 @@ namespace Game.Script
 
                 if (point.y < -3f)
                 {
-                    var anchor = point.x < ballPos.x ? new Vector3(-2.5f, -3f, 0) : new Vector3(2.5f, -3f, 0);
+                    var anchor = point.x < ballPos.x ? new Vector3(-2.5f, -2.5f, 0) : new Vector3(2.5f, -2.5f, 0);
                     direction = anchor - ballPos;
                 }
 
@@ -86,7 +85,7 @@ namespace Game.Script
 
                 if (point.y < -3f)
                 {
-                    var anchor = point.x < posStart.x ? new Vector3(-2.5f, -3f, 0) : new Vector3(2.5f, -3f, 0);
+                    var anchor = point.x < posStart.x ? new Vector3(-2.5f, -2.5f, 0) : new Vector3(2.5f, -2.5f, 0);
                     direction = anchor - posStart;
                 }
 
@@ -195,7 +194,7 @@ namespace Game.Script
         {
             for (int i = 0; i < lsBalls.Count; i++)
             {
-                lsBalls[i].Fly(direction.normalized * 450);
+                lsBalls[i].Fly(direction.normalized * 500);
                 yield return new WaitForSeconds(0.2f);
             }
         }
@@ -314,7 +313,7 @@ namespace Game.Script
         {
             while (ballFirstFall == null && isFly)
             {
-                yield return new WaitForSeconds(1);
+                yield return new WaitForSeconds(0.5f);
             }
 
             if (ballFirstFall)
@@ -363,6 +362,10 @@ namespace Game.Script
             }
 
             lsBalls.Clear();
+            sumAddBall = 0;
+            isFly = false;
+            ballFirstFall = null;
+            _ballFall = 0;
         }
     }
 }
